@@ -12,7 +12,7 @@ and open the template in the editor.
     </head>
     <body>
         <div>
-            <h2>Hey bois, This is but a test</h2>
+            <h2>Hey bois, This is but a test - This is a test for pull</h2>
         </div>
         <img src="https://media1.giphy.com/avatars/100soft/WahNEDdlGjRZ.gif" alt="W3Schools.com">
     </body>
