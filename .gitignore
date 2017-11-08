@@ -1,2 +1,5 @@
 /nbproject/private/
 /nbproject/
+
+#Ignore .log files
+*.log
