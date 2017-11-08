@@ -1,8 +1,18 @@
 <?php
+//require_once('lib/header_md_class.php');
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+/*
+** hent page_array
+*/
+/*
+$myHeader = new Header_md();
+$result = $myHeader->initialize();
+if($result !== true)
+	echo $result; 
+else
+{
+	//render
+	$myHeader->getPage();
+}
+*/
+?>

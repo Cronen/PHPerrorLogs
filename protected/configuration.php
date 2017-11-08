@@ -1,8 +1,18 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Indsætter db-info i variabler
+$dbServername = "localhost";
+$dbUsername = "root";
+$dbPassword = "";
+$dbName = "oes";
 
+//insæt db-info i session
+$_SESSION['connection_info'] = array(
+    'host' => $dbServername,
+    'user' => $dbUsername,
+    'pw' => $dbPassword,
+    'db' => $dbName,
+);
+
+require_once('constants.php');
+?>
