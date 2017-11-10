@@ -1,10 +1,10 @@
 <?php
-//require_once('lib/header_md_class.php');
+require_once('lib/header_class.php');
 
 /*
 ** hent page_array
 */
-/*
+
 $myHeader = new Header_md();
 $result = $myHeader->initialize();
 if($result !== true)
@@ -14,5 +14,5 @@ else
 	//render
 	$myHeader->getPage();
 }
-*/
+
 ?>
