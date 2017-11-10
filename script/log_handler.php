@@ -1,5 +1,4 @@
 <?php
-
 //This should be handled as a script. This will be implementet later
 echo "This is to test reading log file\n";
 $file = fopen('php_error.log', 'r');
