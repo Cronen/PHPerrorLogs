@@ -1,4 +1,5 @@
 <?php
+
 //This should be handled as a script. This will be implementet later
 echo "This is to test reading log file\n";
 $file = fopen('php_error.log', 'r');
@@ -12,8 +13,9 @@ while (true) {
         //reached end of file
         break;
     }
-    if(($line_in_file) >= 1) {
-        //continue;
-    }
-    echo "Line " .$counter . " - " . $line_in_file . "\n";
+    echo $line_in_file . "\n";
+    $date_maybe = substr($line_in_file, 1, 20);
+    $date = DateTime::createFromFormat('j-M-Y H:i:s', $date_maybe);
+    echo $date_maybe . " -- becomes -- ". date_format($date, 'Y-m-d H:i:s') . "\n";
+    break;
 }
