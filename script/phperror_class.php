@@ -18,17 +18,3 @@ class phperror {
         //this should call a DB function in DB class that will handle the DB inserts
     }
 }
-
-class stack_trace {
-
-    var $trace_number;
-    var $trace_msg;
-    var $trace_location;
-    var $trace_file;
-    var $trace_line;
-    
-    function _construct(){
-        //Dette er en constructor
-    }
-
-}

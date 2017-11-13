@@ -12,8 +12,18 @@ while (true) {
         //reached end of file
         break;
     }
-    echo $line_in_file . "\n";
+    echo $line_in_file . "</br>";
     $date_maybe = substr($line_in_file, 1, 20);
     $date = DateTime::createFromFormat('j-M-Y H:i:s', $date_maybe);
-    echo $date_maybe . " -- becomes -- ". date_format($date, 'Y-m-d H:i:s') . "\n";
+    echo $date_maybe . " -- becomes -- ". date_format($date, 'Y-m-d H:i:s') . "</br>";
+    
+    // ANOTHER WAY OG FINDING IT USING REGEX
+    $matches = array();
+    preg_match('/(?<=\[).+?(?=\])/', $line_in_file, $matches);
+    foreach ($matches as $value)
+        {
+        echo "Value: ".$value. "</br>";
+        
+        }
+    
 }
