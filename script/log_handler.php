@@ -16,5 +16,4 @@ while (true) {
     $date_maybe = substr($line_in_file, 1, 20);
     $date = DateTime::createFromFormat('j-M-Y H:i:s', $date_maybe);
     echo $date_maybe . " -- becomes -- ". date_format($date, 'Y-m-d H:i:s') . "\n";
-    break;
 }
