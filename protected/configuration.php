@@ -1,10 +1,10 @@
 <?php
 
 //Indsætter db-info i variabler
-$dbServername = "localhost";
-$dbUsername = "root";
-$dbPassword = "";
-$dbName = "oes";
+$dbServername = "mysql45.unoeuro.com:3306";
+$dbUsername = "codivision_dk";
+$dbPassword = "killkenny100";
+$dbName = "codivision_dk_db2";
 
 //insæt db-info i session
 $_SESSION['connection_info'] = array(
