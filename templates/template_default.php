@@ -12,11 +12,9 @@
     </head>
     <body>
         [%menu%]
-        <div id="wrapper-content" class="container">
-
+        <div id="wrapper-content" class="container-fluid">
             [%result_msg%]
             [%content%]
-            [%footer%]
         </div>
     </body>
 </html>
