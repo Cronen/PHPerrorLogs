@@ -2,14 +2,14 @@
 
 class stack_trace {
 
-    var $trace_number;
-    var $trace_msg;
-    var $trace_location;
-    var $trace_file;
-    var $trace_line;
+    public $trace_number;
+    public $trace_msg;
+    public $trace_location;
+    public $trace_file;
+    public $trace_line;
     
-    function _construct(){
-        //Dette er en constructor
+    function __construct()
+    {
+      //Constructor
     }
-
 }
