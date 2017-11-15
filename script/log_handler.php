@@ -1,7 +1,7 @@
 <?php
 
-include_once"phperror_class.php";
-include_once"stack_trace_class.php";
+include_once"C:\wamp64\www\PHPerrorLogs\lib\phperror_class.php";
+include_once"C:\wamp64\www\PHPerrorLogs\lib\stack_trace_class.php";
 //This should be handled as a script. This will be implementet later
 echo "This is to test reading log file</br>";
 $file = fopen('php_error.log', 'r');
@@ -57,8 +57,6 @@ while (true) {
     echo "ISNUMERIC index 2: ".$errrorstring[2]." BOOLEAN: ".is_numeric($errrorstring[2])."</br>";
     if(is_numeric($errrorstring[2])) 
     {
-        
-       
         $stacktracesearch = array();
         $stackTrace = new stack_trace();
         preg_match('/(\[)(.+?)(\])(\sPHP\s.\s)(\d+?)(\.)(\s.+?\))(\s)(.+.*\\\\)(.+?)(:)(\d+)/', $line_in_file, $stacktracesearch);
