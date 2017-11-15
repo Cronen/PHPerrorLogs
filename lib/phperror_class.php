@@ -20,7 +20,7 @@ class phperror {
     }
 
     function add_strack_trace($stack_trace){
-        array_push($stack_trace_array, $stack_trace);
+        array_push($this->stack_trace_array, $stack_trace);
     }
             
     function add_to_DB() {
