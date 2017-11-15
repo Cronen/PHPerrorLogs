@@ -6,6 +6,7 @@
         <button>Level</button>
         <button>Dato</button>
         <button>Site</button>
+        <button>Vis alt</button>
     </div>
 </div>
 
