@@ -10,14 +10,14 @@ class phperror {
     var $error_line;
     var $stack_trace_array = array();
 
-//    function _construct($err_date, $err_lvl, $err_msg, $err_loca, $err_file, $err_line) {
-//        $this->error_date = $err_date;
-//        $this->error_level = $err_lvl;
-//        $this->error_msg = $err_msg;
-//        $this->error_location = $err_loca;
-//        $this->error_file = $err_file;
-//        $this->error_line = $err_line;
-//    }
+    function __construct($err_date, $err_lvl, $err_msg, $err_loca, $err_file, $err_line) {
+        $this->error_date = $err_date;
+        $this->error_level = $err_lvl;
+        $this->error_msg = $err_msg;
+        $this->error_location = $err_loca;
+        $this->error_file = $err_file;
+        $this->error_line = $err_line;
+    }
 
     function add_stack_trace($stack_trace)
     {
