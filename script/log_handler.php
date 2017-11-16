@@ -8,7 +8,7 @@ $file = fopen('php_error.log', 'r');
 
 $counter = 0;
 $errorArray = array();
-array_push($errorArray, new phperror());
+$currentError = new phperror();
 
 while (true) {
     $counter++;
@@ -17,46 +17,38 @@ while (true) {
         //reached end of file
         break;
     }
-    //echo $line_in_file . "</br>";
-//    $date_maybe = substr($line_in_file, 1, 20);
-//    $date = DateTime::createFromFormat('j-M-Y H:i:s', $date_maybe);
-//    echo $date_maybe . " -- becomes -- ". date_format($date, 'Y-m-d H:i:s') . "</br>";
-    
-    // ANOTHER WAY OG FINDING IT USING REGEX
-    //$matches = array();
+     $errrorstring = null;
      $DATO = array();
      $ERROR = array();
      $MSG = array();
      $filepath = array();
      $filename = array();
      $errorline = array();
-    
-    preg_match('/(?<=\[).+?(?=\])/', $line_in_file, $DATO);
+     
     preg_match('/(?<=PHP\s).*?(?=\:)/', $line_in_file, $ERROR);
+    if (!empty($ERROR))
+        {
+        $errrorstring = $ERROR[0];
+        if ($errrorstring == 'Stack trace')
+            {
+            continue;
+            }
+        }
+    else
+    {
+        continue;
+    }
+     
+    preg_match('/(?<=\[).+?(?=\])/', $line_in_file, $DATO);
     preg_match('/(?<=\:  ).+?(?=\ in )/', $line_in_file, $MSG);
     preg_match('/\s.:\\\\.*\\\\/', $line_in_file, $filepath);
-    //preg_match('/\\\\.*.php/', $line_in_file, $filename);
     preg_match('/[a-zA-Z0-9\_\-]*.php /',$line_in_file,$filename);
     preg_match('/(?<= on line )[0-9]*/', $line_in_file, $errorline);
     
-//    preg_match('/PHP(.*?):/', $line_in_file, $ERROR);
-//    preg_match('/(?<=\:  ).+?(?=\ in )/', $line_in_file, $MSG);
-//    preg_match('/(.:\\).+?(.php))/', $line_in_file, $filepath);
-//    preg_match('/(?<= on line )[0-9]*/', $line_in_file, $errorline);
-    
-    
-    if(!empty($ERROR))
-    {
-    $errrorstring = $ERROR[0];
-    
-    if ($errrorstring == 'Stack trace')
-    {
-      current($errorArray)->stack_trace_array = array();
-      
-    }
-    echo "ISNUMERIC index 2: ".$errrorstring[2]." BOOLEAN: ".is_numeric($errrorstring[2])."</br>";
-    if(is_numeric($errrorstring[2])) 
-    {
+    echo "ISNUMERIC index 2: ".$errrorstring[2]." BOOLEAN: ".is_numeric($errrorstring[2])."</br>CurrentERROR:</br> ".$currentError. "</br>";
+    if((is_numeric($errrorstring[2]) && (!empty($currentError))))
+    {   
+        
         $stacktracesearch = array();
         $stackTrace = new stack_trace();
         preg_match('/(\[)(.+?)(\])(\sPHP\s.\s)(\d+?)(\.)(\s.+?\))(\s)(.+.*\\\\)(.+?)(:)(\d+)/', $line_in_file, $stacktracesearch);
@@ -68,33 +60,59 @@ while (true) {
         $stackTrace->trace_line = $stacktracesearch[12];
         
         //array_push(current($errorArray)->stack_trace_array,$stackTrace);
-        current($errorArray)->add_stack_trace($stackTrace);
+        $currentError->add_stack_trace($stackTrace);
     }
-    else
-    {
+        echo 'currentError_dateVALUE: '.$currentError->error_date."</br>";
+        echo 'currentError_levelVALUE: '.$currentError->error_level."</br>";
+        echo 'currentError_msgVALUE: '.$currentError->error_msg."</br>";
+        echo 'currentError_locationVALUE: '.$currentError->error_location."</br>";
+        echo 'currentError_fileVALUE: '.$currentError->error_file."</br>";
+        echo 'currentError_lineVALUE: '.$currentError->error_line."</br>";
+        
+        foreach ($currentError->stack_trace_array as $stackvalue)
+          {
+           echo 'currentErrorStackNummerVALUE: '.$stackvalue->trace_number."</br>";
+           echo 'currentErrorStackMSGVALUE: '.$stackvalue->trace_msg."</br>"; 
+           echo 'currentErrorStackPATHVALUE: '.$stackvalue->trace_location."</br>"; 
+           echo 'currentErrorStackFILEVALUE: '.$stackvalue->trace_file."</br>"; 
+           echo 'currentErrorStackLINEVALUE: '.$stackvalue->trace_line."</br>"; 
+           }
+    
+    
         if (empty($MSG)) {
-            array_push($MSG,"");
+            //array_push($MSG,"");
+            continue;
         }
         if (empty($filepath)) {
-            array_push($filepath,"");
+           // array_push($filepath,"");
+            continue;
         }
         if (empty($filename)) {
-            array_push($filename,"");
+            //array_push($filename,"");
+            continue;
         }
         if (empty($errorline)) {
-            array_push($errorline,"");
+           // array_push($errorline,"");
+            continue;
         }
-        
-        current($errorArray)->error_date =$DATO[0];
-        current($errorArray)->error_level =$ERROR[0];
-        current($errorArray)->error_msg =$MSG[0];
-        current($errorArray)->error_location =$filepath[0];
-        current($errorArray)->error_file =$filename[0];
-        current($errorArray)->error_line =$errorline[0];
+//        if (empty($DATO) || empty($ERROR) || empty($MSG) || empty($filepath) || empty($filename) || empty($errorline))
+//        {
+//        //Kontrol af tomme arrays fra reqex. Disse skal der ses nærmere på, derfor printet. 
+//        //echo "Fejl på \n";
+//        //print_r($line_in_file);
+//        continue;
+//        }
+        $currentError =  new phperror();
+        $currentError->error_date =$DATO[0];
+        $currentError->error_level =$ERROR[0];
+        $currentError->error_msg =$MSG[0];
+        $currentError->error_location =$filepath[0];
+        $currentError->error_file =$filename[0];
+        $currentError->error_line =$errorline[0];
     
-        array_push($errorArray, new phperror());
-    }
-  }
+        array_push($errorArray, $currentError);
+}
+
         
 //        foreach ($DATO as $value)
 //        {
@@ -127,7 +145,7 @@ while (true) {
 //        
 //        }
     
-}
+
         foreach ($errorArray as $errorobject)
         {
         echo 'error_dateVALUE: '.$errorobject->error_date."</br>";
