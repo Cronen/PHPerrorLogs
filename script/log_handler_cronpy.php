@@ -1,10 +1,13 @@
 <?php
 
+include( $_SERVER['DOCUMENT_ROOT'] . "/lib/phperror_class.php");
+include( $_SERVER['DOCUMENT_ROOT'] . "/lib/stack_trace_class.php");
 //This should be handled as a script. This will be implementet later
-echo "This is to test reading log file\n";
 $file = fopen('php_error.log', 'r');
 
 $counter = 0;
+$errorArray = array();
+$php_error = NULL;
 while (true) {
     $counter++;
     $line_in_file = fgets($file);
@@ -12,28 +15,49 @@ while (true) {
         //reached end of file
         break;
     }
+    $errrorstring = NULL;
 
     $DATO = array();
     $ERROR = array();
     $MSG = array();
     $filepath = array();
+    $filename = array();
     $errorline = array();
 
-    preg_match('/(?<=\[).+?(?=\])/', $line_in_file, $DATO);
     preg_match('/(?<=PHP\s).*?(?=\:)/', $line_in_file, $ERROR);
-    preg_match('/(?<=\:  ).+?(?=\ in )/', $line_in_file, $MSG);
-    preg_match('/ .:\\\\.*.php /', $line_in_file, $filepath);
-    preg_match('/(?<= on line )[0-9]*/', $line_in_file, $errorline);
-
+    //tjekker her, for at spare ressourcer på regex
     if (!empty($ERROR)) {
-        $error_msg = $ERROR[0];
-        echo $error_msg ."\n";
-        if (is_numeric($error_msg[3])) {
-            $trace_array = array();
-            preg_match('/\[(.+?)\]\sPHP\s+(\d+?)\.\s(.+?\))\s(.+.*\\\\)(.+?):(\d+)/', $line_in_file, $trace_array);
-            //bind trace til object
-        } else {
-            //opret phperror object
+        $errrorstring = $ERROR[0];
+        if ($errrorstring == 'Stack trace') {
+            continue;
         }
+    }else{
+        continue;
     }
+    preg_match('/(?<=\[).+?(?=\])/', $line_in_file, $DATO);
+    preg_match('/(?<=\:  ).+?(?=\ in )/', $line_in_file, $MSG);
+    preg_match('/\s.:\\\\.*\\\\/', $line_in_file, $filepath);
+    preg_match('/[a-zA-Z0-9\_\-]*.php /', $line_in_file, $filename);
+    preg_match('/(?<= on line )[0-9]*/', $line_in_file, $errorline);
+    if (is_numeric($ERROR[0][2]) && $php_error != NULL) {
+        //formodet at være en stack trace, som tilhøre den nuværende $php_error objekt i memory
+        $stack_trace_array = array();
+        preg_match('/\[(.+?)\]\sPHP\s+(\d+?)\.\s(.+?\))\s(.+.*\\\\)(.+?):(\d+)/', $line_in_file, $stack_trace_array);
+        $tmp_stack_trace = new stack_trace($stack_trace_array[2], $stack_trace_array[3], $stack_trace_array[4], $stack_trace_array[5], $stack_trace_array[6]);
+        $php_error->add_stack_trace($tmp_stack_trace);
+    }
+
+    if (empty($DATO) || empty($ERROR) || empty($MSG) || empty($filepath) || empty($filename) || empty($errorline)) {
+        //Kontrol af tomme arrays fra reqex. Disse skal der ses nærmere på, derfor printet. 
+        //echo "Fejl på \n";
+        //print_r($line_in_file);
+        continue;
+    }
+    //formodet at være en error
+    $php_error = new phperror($DATO[0], $ERROR[0], $MSG[0], $filepath[0], $filename[0], $errorline[0]);
+    array_push($errorArray, $php_error);
 }
+foreach ($errorArray as $errorobject) {
+    print_r($errorobject);
+}
+?>
