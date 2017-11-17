@@ -15,5 +15,8 @@ class stack_trace {
         $this->trace_file = $trc_file;
         $this->trace_line = $trc_line;
     }
+    function __toString() {
+        return "STACK TRACE:</br>Trace#: ".$trace_number."</br>TraceMessag: ".$trace_msg."</br>StackPath: ".$trace_location."</br>StackFile: ".$trace_file."</br> StackLine: ".$trace_line."</br>";
+    }
 
 }
