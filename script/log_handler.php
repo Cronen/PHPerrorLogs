@@ -69,11 +69,11 @@ while (true) {
             
         array_push($errorArray, $currentError);
 }
-
-        
-Function save_in_database()
+save_in_database($errorArray);
+ exit;       
+Function save_in_database($whateverarray)
 {
-   foreach ($errorArray as $errorobject)
+   foreach ($whateverarray as $errorobject)
    {
     // ECHO FOR DEBUGGIN. SLETTES VED LAUNCH
     echo $errorobject;
