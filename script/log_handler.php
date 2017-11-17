@@ -1,7 +1,8 @@
 <?php
 
-include_once"C:\wamp64\www\PHPerrorLogs\lib\phperror_class.php";
-include_once"C:\wamp64\www\PHPerrorLogs\lib\stack_trace_class.php";
+include_once ($_SERVER['DOCUMENT_ROOT'] . '\lib\phperror_class.php');
+include_once ($_SERVER['DOCUMENT_ROOT'] . '\lib\stack_trace_class.php');
+
 //This should be handled as a script. This will be implementet later
 echo "This is to test reading log file</br>";
 $file = fopen('php_error.log', 'r');
@@ -45,8 +46,7 @@ while (true) {
     preg_match('/[a-zA-Z0-9\_\-]*.php /',$line_in_file,$filename);
     preg_match('/(?<= on line )[0-9]*/', $line_in_file, $errorline);
     
-    //echo "ISNUMERIC index 2: ".$errrorstring[2]." BOOLEAN: ".is_numeric($errrorstring[2])."</br>CurrentERROR:</br> ".$currentError. "</br>";
-    if((is_numeric($errrorstring[2]) && (!empty($currentError))))
+   if((is_numeric($errrorstring[2]) && (!empty($currentError))))
     {   
         
         $stacktracesearch = array();
@@ -55,123 +55,29 @@ while (true) {
         //bind trace til object
          $stackTrace = new stack_trace($stacktracesearch[2],$stacktracesearch[3],$stacktracesearch[4],$stacktracesearch[5],$stacktracesearch[6]);
         
-//        $stackTrace->trace_number = $stacktracesearch[5];
-//        $stackTrace->trace_msg = $stacktracesearch[7];
-//        $stackTrace->trace_location =$stacktracesearch[9] ;
-//        $stackTrace->trace_file =$stacktracesearch[10] ;
-//        $stackTrace->trace_line = $stacktracesearch[12];
-        
-        //array_push(current($errorArray)->stack_trace_array,$stackTrace);
         $currentError->add_stack_trace($stackTrace);
     }
-//        echo 'currentError_dateVALUE: '.$currentError->error_date."</br>";
-//        echo 'currentError_levelVALUE: '.$currentError->error_level."</br>";
-//        echo 'currentError_msgVALUE: '.$currentError->error_msg."</br>";
-//        echo 'currentError_locationVALUE: '.$currentError->error_location."</br>";
-//        echo 'currentError_fileVALUE: '.$currentError->error_file."</br>";
-//        echo 'currentError_lineVALUE: '.$currentError->error_line."</br>";
-//        
-//        foreach ($currentError->stack_trace_array as $stackvalue)
-//          {
-//           echo 'currentErrorStackNummerVALUE: '.$stackvalue->trace_number."</br>";
-//           echo 'currentErrorStackMSGVALUE: '.$stackvalue->trace_msg."</br>"; 
-//           echo 'currentErrorStackPATHVALUE: '.$stackvalue->trace_location."</br>"; 
-//           echo 'currentErrorStackFILEVALUE: '.$stackvalue->trace_file."</br>"; 
-//           echo 'currentErrorStackLINEVALUE: '.$stackvalue->trace_line."</br>"; 
-//           }
-//    
-    
-        if (empty($MSG)) {
-            //array_push($MSG,"");
-            continue;
+
+        if (empty($DATO) || empty($ERROR) || empty($MSG) || empty($filepath) || empty($filename) || empty($errorline))
+        {
+        //Kontrol af tomme arrays fra reqex. Disse skal der ses nærmere på, derfor printet. 
+        //echo "Fejl på \n";
+        //print_r($line_in_file);
+        continue;
         }
-        if (empty($filepath)) {
-           // array_push($filepath,"");
-            continue;
-        }
-        if (empty($filename)) {
-            //array_push($filename,"");
-            continue;
-        }
-        if (empty($errorline)) {
-           // array_push($errorline,"");
-            continue;
-        }
-//        if (empty($DATO) || empty($ERROR) || empty($MSG) || empty($filepath) || empty($filename) || empty($errorline))
-//        {
-//        //Kontrol af tomme arrays fra reqex. Disse skal der ses nærmere på, derfor printet. 
-//        //echo "Fejl på \n";
-//        //print_r($line_in_file);
-//        continue;
-//        }
         $currentError =  new phperror($DATO[0],$ERROR[0],$MSG[0],$filepath[0],$filename[0],$errorline[0]);
-        
-//        $currentError->error_date = date("Y-m-d H:i:s", strtotime($DATO[0]));
-//        //$currentError->error_date =$DATO[0];
-//        $currentError->error_level =$ERROR[0];
-//        $currentError->error_msg =$MSG[0];
-//        $currentError->error_location =$filepath[0];
-//        $currentError->error_file =$filename[0];
-//        $currentError->error_line =$errorline[0];
-    
+            
         array_push($errorArray, $currentError);
 }
 
         
-//        foreach ($DATO as $value)
-//        {
-//        echo "Dato: ".$value. "</br>";
-//        
-//        }
-//        foreach ($ERROR as $value)
-//        {
-//        echo "Error: ".$value. "</br>";
-//        
-//        }
-//        foreach ($MSG as $value)
-//        {
-//        echo "Message: ".$value. "</br>";
-//        
-//        }
-//        foreach ($filepath as $value)
-//        {
-//        echo "FilePath: ".$value. "</br>";
-//        
-//        }
-//        foreach ($filename as $value)
-//        {
-//        echo "Filename: ".$value. "</br>";
-//        
-//        }
-//        foreach ($errorline as $value)
-//        {
-//        echo "Errorline: ".$value. "</br>";
-//        
-//        }
-    
-foreach ($errorArray as $errorobject)
+Function save_in_database()
 {
-//        echo 'error_dateVALUE: '.$errorobject->error_date."</br>";
-//        echo 'error_levelVALUE: '.$errorobject->error_level."</br>";
-//        echo 'error_msgVALUE: '.$errorobject->error_msg."</br>";
-//        echo 'error_locationVALUE: '.$errorobject->error_location."</br>";
-//        echo 'error_fileVALUE: '.$errorobject->error_file."</br>";
-//        echo 'error_lineVALUE: '.$errorobject->error_line."</br>";
-//                
-//        echo 'isEMpty_stack_trace_arrayVALUE: '.count($errorobject->stack_trace_array)."</br>";
-//                
-//        if (!empty($errorobject->stack_trace_array))
-//        {
-//          foreach ($errorobject->stack_trace_array as $stackvalue)
-//          {
-//           echo 'StackNummerVALUE: '.$stackvalue->trace_number."</br>";
-//           echo 'StackMSGVALUE: '.$stackvalue->trace_msg."</br>"; 
-//           echo 'StackPATHVALUE: '.$stackvalue->trace_location."</br>"; 
-//           echo 'StackFILEVALUE: '.$stackvalue->trace_file."</br>"; 
-//           echo 'StackLINEVALUE: '.$stackvalue->trace_line."</br>"; 
-//           }
-//        }
-            
-echo $errorobject;
-$errorobject->add_to_DB();      
-}
+   foreach ($errorArray as $errorobject)
+   {
+    // ECHO FOR DEBUGGIN. SLETTES VED LAUNCH
+    echo $errorobject;
+    $errorobject->add_to_DB();
+    }    
+}   
+
