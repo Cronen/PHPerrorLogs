@@ -49,18 +49,17 @@
         {
             //Har navngivet error_id til ID, derfor bruger jeg her 'ID'
             $error_id = $array['ID'];
-            
             $row = $array;
             
             //Array med handlinger/tools/triggers
             $tools = array();
             
             //"slet postering" trigger
-            $tools[] = '<button>Slet</button>';
+            $tools[] = '<button data-state="ready" name="pro_delete" onclick="pro_delete($(this), \'php_error\',  '.$error_id.')" class="btn-danger">Slet</button>';
             //"Udskyd postering" trigger
-            $tools[] = '<button>Udskyd</button>';
+            $tools[] = '<button data-state="ready" onclick="pro_postpone($(this), \'php_error\',  '.$error_id.')" class="btn-warning">Udskyd</button>';
             //"Godkend postering" trigger
-            $tools[] = '<button>Godkend</button>';
+            $tools[] = '<button data-state="ready" onclick="pro_approve($(this), \'php_error\',  '.$error_id.')" class="btn-success">Godkend</button>';
             
             $row['Handling'] = implode(' ', $tools);
             
@@ -71,7 +70,7 @@
 		
 	//render
 	echo implode('', $html);
-
+        
         ?>
     </div>
 </div>
