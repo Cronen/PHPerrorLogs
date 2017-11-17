@@ -53,6 +53,8 @@ while (true) {
        
         preg_match('/\[(.+?)\]\sPHP\s+(\d+?)\.\s(.+?\))\s(.+.*\\\\)(.+?):(\d+)/', $line_in_file, $stacktracesearch);
         //bind trace til object
+        $stacktracesearch[3] = reverse_backslash($stacktracesearch[3]);
+        $stacktracesearch[4] = reverse_backslash($stacktracesearch[4]);
          $stackTrace = new stack_trace($stacktracesearch[2],$stacktracesearch[3],$stacktracesearch[4],$stacktracesearch[5],$stacktracesearch[6]);
         
         $currentError->add_stack_trace($stackTrace);
@@ -65,19 +67,34 @@ while (true) {
         //print_r($line_in_file);
         continue;
         }
+        $filepath[0]= reverse_backslash($filepath[0]);
+        $MSG[0]= reverse_backslash($MSG[0]);
         $currentError =  new phperror($DATO[0],$ERROR[0],$MSG[0],$filepath[0],$filename[0],$errorline[0]);
             
         array_push($errorArray, $currentError);
 }
-save_in_database($errorArray);
- exit;       
-Function save_in_database($whateverarray)
+
+save_to_database($errorArray);
+
+exit;       
+
+Function save_to_database($php_error_array)
 {
-   foreach ($whateverarray as $errorobject)
-   {
-    // ECHO FOR DEBUGGIN. SLETTES VED LAUNCH
-    echo $errorobject;
-    $errorobject->add_to_DB();
-    }    
-}   
+    include( $_SERVER['DOCUMENT_ROOT'] . "/protected/configuration.php");
+    include( $_SERVER['DOCUMENT_ROOT'] . "/lib/db_class.php");
+    include( $_SERVER['DOCUMENT_ROOT'] . "/lib/function_lib_shared.php");
+    $db = new db_md();
+    foreach ($php_error_array as $errorobject) {
+        
+        echo $errorobject;
+        $errorobject->add_to_db($db);
+        
+    }
+    
+}
+Function reverse_backslash($instring)
+{
+    return str_replace(chr(92),chr(47),$instring);
+    
+}
 
