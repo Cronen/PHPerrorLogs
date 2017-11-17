@@ -55,11 +55,11 @@
             $tools = array();
             
             //"slet postering" trigger
-            $tools[] = '<button data-state="ready" name="pro_delete" onclick="pro_delete($(this), \'php_error\',  '.$error_id.')" class="btn-danger">Slet</button>';
+            $tools[] = '<button data-state="ready" data-action="pro_delete" onclick="pro_delete($(this), \'php_error\',  '.$error_id.')" class="btn-danger">Slet</button>';
             //"Udskyd postering" trigger
-            $tools[] = '<button data-state="ready" onclick="pro_postpone($(this), \'php_error\',  '.$error_id.')" class="btn-warning">Udskyd</button>';
+            $tools[] = '<button data-state="ready" data-action="" onclick="pro_postpone($(this), \'php_error\',  '.$error_id.')" class="btn-warning">Udskyd</button>';
             //"Godkend postering" trigger
-            $tools[] = '<button data-state="ready" onclick="pro_approve($(this), \'php_error\',  '.$error_id.')" class="btn-success">Godkend</button>';
+            $tools[] = '<button data-state="ready" data-action=""onclick="pro_approve($(this), \'php_error\',  '.$error_id.')" class="btn-success">Godkend</button>';
             
             $row['Handling'] = implode(' ', $tools);
             
