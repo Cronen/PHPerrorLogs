@@ -45,7 +45,7 @@ while (true) {
     preg_match('/[a-zA-Z0-9\_\-]*.php /',$line_in_file,$filename);
     preg_match('/(?<= on line )[0-9]*/', $line_in_file, $errorline);
     
-    echo "ISNUMERIC index 2: ".$errrorstring[2]." BOOLEAN: ".is_numeric($errrorstring[2])."</br>CurrentERROR:</br> ".$currentError. "</br>";
+    //echo "ISNUMERIC index 2: ".$errrorstring[2]." BOOLEAN: ".is_numeric($errrorstring[2])."</br>CurrentERROR:</br> ".$currentError. "</br>";
     if((is_numeric($errrorstring[2]) && (!empty($currentError))))
     {   
         
@@ -62,22 +62,22 @@ while (true) {
         //array_push(current($errorArray)->stack_trace_array,$stackTrace);
         $currentError->add_stack_trace($stackTrace);
     }
-        echo 'currentError_dateVALUE: '.$currentError->error_date."</br>";
-        echo 'currentError_levelVALUE: '.$currentError->error_level."</br>";
-        echo 'currentError_msgVALUE: '.$currentError->error_msg."</br>";
-        echo 'currentError_locationVALUE: '.$currentError->error_location."</br>";
-        echo 'currentError_fileVALUE: '.$currentError->error_file."</br>";
-        echo 'currentError_lineVALUE: '.$currentError->error_line."</br>";
-        
-        foreach ($currentError->stack_trace_array as $stackvalue)
-          {
-           echo 'currentErrorStackNummerVALUE: '.$stackvalue->trace_number."</br>";
-           echo 'currentErrorStackMSGVALUE: '.$stackvalue->trace_msg."</br>"; 
-           echo 'currentErrorStackPATHVALUE: '.$stackvalue->trace_location."</br>"; 
-           echo 'currentErrorStackFILEVALUE: '.$stackvalue->trace_file."</br>"; 
-           echo 'currentErrorStackLINEVALUE: '.$stackvalue->trace_line."</br>"; 
-           }
-    
+//        echo 'currentError_dateVALUE: '.$currentError->error_date."</br>";
+//        echo 'currentError_levelVALUE: '.$currentError->error_level."</br>";
+//        echo 'currentError_msgVALUE: '.$currentError->error_msg."</br>";
+//        echo 'currentError_locationVALUE: '.$currentError->error_location."</br>";
+//        echo 'currentError_fileVALUE: '.$currentError->error_file."</br>";
+//        echo 'currentError_lineVALUE: '.$currentError->error_line."</br>";
+//        
+//        foreach ($currentError->stack_trace_array as $stackvalue)
+//          {
+//           echo 'currentErrorStackNummerVALUE: '.$stackvalue->trace_number."</br>";
+//           echo 'currentErrorStackMSGVALUE: '.$stackvalue->trace_msg."</br>"; 
+//           echo 'currentErrorStackPATHVALUE: '.$stackvalue->trace_location."</br>"; 
+//           echo 'currentErrorStackFILEVALUE: '.$stackvalue->trace_file."</br>"; 
+//           echo 'currentErrorStackLINEVALUE: '.$stackvalue->trace_line."</br>"; 
+//           }
+//    
     
         if (empty($MSG)) {
             //array_push($MSG,"");
@@ -103,7 +103,9 @@ while (true) {
 //        continue;
 //        }
         $currentError =  new phperror();
-        $currentError->error_date =$DATO[0];
+        
+        $currentError->error_date = date("Y-m-d H:i:s", strtotime($DATO[0]));
+        //$currentError->error_date =$DATO[0];
         $currentError->error_level =$ERROR[0];
         $currentError->error_msg =$MSG[0];
         $currentError->error_location =$filepath[0];
@@ -168,6 +170,6 @@ while (true) {
            echo 'StackLINEVALUE: '.$stackvalue->trace_line."</br>"; 
            }
         }
-               
+        $errorobject->add_to_DB();      
         }
 ?>
