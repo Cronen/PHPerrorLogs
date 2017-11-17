@@ -149,9 +149,8 @@ while (true) {
 //        
 //        }
     
-
-        foreach ($errorArray as $errorobject)
-        {
+foreach ($errorArray as $errorobject)
+{
 //        echo 'error_dateVALUE: '.$errorobject->error_date."</br>";
 //        echo 'error_levelVALUE: '.$errorobject->error_level."</br>";
 //        echo 'error_msgVALUE: '.$errorobject->error_msg."</br>";
@@ -173,7 +172,6 @@ while (true) {
 //           }
 //        }
             
-        echo $errorobject;
-        $errorobject->add_to_DB();      
-        }
-?>
+echo $errorobject;
+$errorobject->add_to_DB();      
+}
