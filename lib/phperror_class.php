@@ -24,6 +24,7 @@ class phperror {
     }
 
     function add_to_DB($db) {
+        $number__of_inserts = 0;
         //finder error level i tal
         $level = "SELECT level_ID FROM error_levels WHERE level = '$this->error_level'";
 
@@ -39,12 +40,15 @@ class phperror {
             $error_id = $db->makeArray($sql_select_string);
             //adds stack trace
             if ($success == true) {
+                $number__of_inserts++;
                 //foreach trace inserts into DB
                 foreach ($this->stack_trace_array as $stack_trace) {
+                    $number__of_inserts++;
                     $stack_trace->add_to_db($db, $error_id[0]['error_ID']);
                 }
             }
         }
+        return $number__of_inserts;
     }
 
     function __toString() {
@@ -59,7 +63,6 @@ class phperror {
                 $returnString .= 'StackLine: ' . $stackvalue->trace_line . "</br>";
             }
         }
-
         return $returnString;
     }
 
