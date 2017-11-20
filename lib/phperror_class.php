@@ -27,9 +27,9 @@ class phperror {
         $number__of_inserts = 0;
         //finder error level i tal
         $level = "SELECT level_ID FROM error_levels WHERE level = '$this->error_level'";
-
+        $extend_date = "";
         $sql_select_string = "SELECT error_ID FROM php_error "
-                . "WHERE error_date = '$this->error_date' AND php_error_level = ($level) AND error_msg = '$this->error_msg' AND "
+                . "WHERE $extend_date php_error_level = ($level) AND error_msg = '$this->error_msg' AND "
                 . "error_location = '$this->error_location ' AND error_file = '$this->error_file' AND error_line = '$this->error_line';";
         $error_id = $db->makeArray($sql_select_string);
         //echo $sql_select_string;
@@ -37,6 +37,7 @@ class phperror {
             $sql_insert_string = "INSERT INTO `php_error` (`error_date`, `php_error_level`, `error_msg`, `error_location`, `error_file`, `error_line`) "
                     . "VALUES ('$this->error_date', ($level), '$this->error_msg', '$this->error_location ','$this->error_file', '$this->error_line')";
             $success = $db->addData($sql_insert_string);
+            $extend_date = "error_date = '$this->error_date' AND";
             $error_id = $db->makeArray($sql_select_string);
             //adds stack trace
             if ($success == true) {
