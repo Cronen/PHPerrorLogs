@@ -14,7 +14,7 @@ Header_md::loadFiles();
 
 //Validate user exists in session
 if (!$_SESSION['logged_in'] == true) {
-   echo "Der en fejl. Log ind igen";
+    echo "Der en fejl. Log ind igen";
 }
 
 /*
@@ -29,16 +29,13 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_delete") {
 
     if ($delRes == true) {
         echo "Postering er slettet";
-        
-    } 
-    else {
+    } else {
         echo "Handlingen fejlede. Prøv igen";
     }
 }
 
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_sort_all") {
+if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
 
-    $_SESSION['last_sort'] = "pro_sort_all";
     //Instantiering af klasser
     $data = new db_md();
     $tablemkr = new table_md_class();
@@ -52,7 +49,11 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_sort_all") {
     foreach ($arrays as $array) {
         $erlvs[$array['error_ID']][] = $array;
     }
-
+    
+    //Tjekker fra REQUEST['sort'] hvad der skal sorteres efter. 
+    $sort_by = $_REQUEST['sort'];
+    $order_by = $_REQUEST['order'];
+    
     //indhent data ud fra sorteringsvalg
     $table_sql = "
                 SELECT 
@@ -65,7 +66,9 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_sort_all") {
                 error_file AS Fil,
                 error_line AS linje
                 FROM php_error
+                ORDER BY ".$sort_by." ".$order_by."
                 LIMIT 5;";
+    echo $table_sql;
 
     //Lav tabel med indhentet data
     $table_data = $data->makeArray($table_sql);
@@ -95,7 +98,5 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_sort_all") {
 
     //render
     echo implode('', $html);
-    
-    
 }
 ?>

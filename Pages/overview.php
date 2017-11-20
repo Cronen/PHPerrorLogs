@@ -2,13 +2,15 @@
 
 <div class="container-fluid">
     <div class="col-md-12">
-        <span>Vælg at sortere efter:</span>
-        <button data-state="ready" date-action="pro_sort_level" onclick="pro_sort_level()"class="btn-primary">Level</button>
-        <button data-state="ready" date-action="pro_sort_date" onclick="pro_sort_dato()" class="btn-primary">Dato</button>
-        <button data-state="ready" date-action="pro_sort_site" onclick="pro_sort_site())" class="btn-primary">Site</button>
-        <button data-state="ready" date-action="pro_sort_all" onclick="pro_sort_all()" class="btn-primary">Vis alt</button>
-    </div>
+        <center>
+        <h1>Vælg at sortere efter:</h1>
+        <button data-state="asc" onclick="pro_sort_level($(this));"class="btn-primary sort-button">Level</button>
+        <button data-state="asc" onclick="pro_sort_date($(this));" class="btn-primary sort-button">Dato</button>
+        <button data-state="asc" onclick="pro_sort_site($(this));" class="btn-primary sort-button">Site</button>
+    </div></center>
 </div>
+
+<br>
 
 <div class="container-fluid overview-table">
     <div id="test" class="col-md-12">
