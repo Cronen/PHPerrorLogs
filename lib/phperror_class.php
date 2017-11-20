@@ -27,25 +27,21 @@ class phperror {
         //finder error level i tal
         $level = "SELECT level_ID FROM error_levels WHERE level = '$this->error_level'";
 
-        $sql_select_string = "SELECT * FROM php_error "
+        $sql_select_string = "SELECT error_ID FROM php_error "
                 . "WHERE error_date = '$this->error_date' AND php_error_level = ($level) AND error_msg = '$this->error_msg' AND "
                 . "error_location = '$this->error_location ' AND error_file = '$this->error_file' AND error_line = '$this->error_line';";
-        $result = $db->makeArray($sql_select_string);
+        $error_id = $db->makeArray($sql_select_string);
         //echo $sql_select_string;
-        if (empty($result)) {
+        if (empty($error_id[0])) {
             $sql_insert_string = "INSERT INTO `php_error` (`error_date`, `php_error_level`, `error_msg`, `error_location`, `error_file`, `error_line`) "
                     . "VALUES ('$this->error_date', ($level), '$this->error_msg', '$this->error_location ','$this->error_file', '$this->error_line')";
             $success = $db->addData($sql_insert_string);
-
+            $error_id = $db->makeArray($sql_select_string);
             //adds stack trace
             if ($success == true) {
-                //gets ID of inserted error
-                $id_of_error_select = "SELECT error_ID FROM php_error "
-                        . "WHERE error_date = '$this->error_date' AND php_error_level = ($level) AND error_msg = '$this->error_msg' AND "
-                        . "error_location = '$this->error_location ' AND error_file = '$this->error_file' AND error_line = '$this->error_line'";
                 //foreach trace inserts into DB
                 foreach ($this->stack_trace_array as $stack_trace) {
-                    $stack_trace->add_to_db($db, $id_of_error_select);
+                    $stack_trace->add_to_db($db, $error_id[0]['error_ID']);
                 }
             }
         }

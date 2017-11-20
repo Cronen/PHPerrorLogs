@@ -16,9 +16,9 @@ class stack_trace {
         $this->trace_line = $trc_line;
     }
 
-    function add_to_DB($db, $id_of_error_select) {      
+    function add_to_DB($db, $id_of_error) {      
         $sql_insert_string = "INSERT INTO `stack_trace` (`error_ref_ID`, `trace_number`, `trace_msg`, `trace_location`, `trace_file`, `trace_line`) "
-                . "VALUES (($id_of_error_select), '$this->trace_number', '$this->trace_msg', '$this->trace_location ', '$this->trace_file','$$this->trace_line');";
+                . "VALUES ('$id_of_error', '$this->trace_number', '$this->trace_msg', '$this->trace_location ', '$this->trace_file','$$this->trace_line');";
         $db->addData($sql_insert_string);
     }
 
