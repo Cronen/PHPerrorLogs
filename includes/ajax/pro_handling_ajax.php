@@ -56,18 +56,20 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
     
     //indhent data ud fra sorteringsvalg
     $table_sql = "
-                SELECT 
-                '' AS 'Handling',
-                error_ID AS ID,
-                error_date AS Dato,
-                php_error_level AS level,
-                error_msg AS Fejlmeddelse,
-                error_location AS URL,
-                error_file AS Fil,
-                error_line AS linje
-                FROM php_error
-                ORDER BY ".$sort_by." ".$order_by."
-                LIMIT 5;";
+        SELECT 
+        '' as 'Handling', 
+        php_error.error_ID AS ID, 
+        php_error.error_date AS Dato, 
+        error_levels.level AS Level, 
+        php_error.error_msg AS Fejlmeddelelse, 
+        php_error.error_location AS URL, 
+        php_error.error_file AS Fil, 
+        php_error.error_line AS Linje
+        FROM php_error 
+        INNER JOIN error_levels ON php_error.php_error_level = error_levels.level_ID
+        ORDER BY ".$sort_by." ".$order_by."
+        LIMIT 5;";
+
     echo $table_sql;
 
     //Lav tabel med indhentet data
