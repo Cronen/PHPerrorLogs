@@ -44,7 +44,7 @@ while (true) {
     preg_match('/[a-zA-Z0-9\_\-]*.php /', $line_in_file, $filename);
     preg_match('/(?<= on line )[0-9]*/', $line_in_file, $errorline);
 
-    if ((is_numeric($errrorstring[2]) && (!empty($currentError)))) {
+    if ((is_numeric($errrorstring[2]) && $currentError != NULL)) {
 
         $stacktracesearch = array();
 
@@ -61,6 +61,7 @@ while (true) {
     if (empty($DATO) || empty($ERROR) || empty($MSG) || empty($filepath) || empty($filename) || empty($errorline)) {
         //Kontrol af tomme arrays fra reqex. Disse skal der ses nærmere på, derfor printet. 
         array_push($lines_not_handled, $line_in_file);
+        $currentError = NULL;
         continue;
     }
     $filepath[0] = reverse_backslash($filepath[0]);
