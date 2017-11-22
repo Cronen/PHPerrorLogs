@@ -76,6 +76,7 @@ class login_md {
         if ($username == "admin" && $password == "root") {
             //set session
             $_SESSION['logged_in'] = true;
+            $_SESSION['user_name'] = "admin";
 
             return true;
         }

@@ -26,7 +26,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_delete") {
     $sqlDelete = "DELETE FROM php_error WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
     $delete = new db_md();
     $delRes = $delete->addData($sqlDelete);
-
+    
     if ($delRes == true) {
         echo "Postering er slettet";
     } else {
@@ -86,12 +86,14 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
         $tools = array();
 
         //"slet postering" trigger
-        $tools[] = '<button data-state="ready" data-action="pro_delete" onclick="pro_delete($(this), \'php_error\',  ' . $error_id . ')" class="btn-danger">Slet</button>';
+        $tools[] = '<button data-state="ready" data-action="pro_delete" onclick="pro_delete($(this), \'php_error\',  ' . $error_id . ')" data-toggle="tooltip" data-placement="bottom" title="Slet postering" class="handling-btn btn-danger glyphicon glyphicon-trash"></button>';
         //"Udskyd postering" trigger
-        $tools[] = '<button data-state="ready" data-action="" onclick="pro_postpone($(this), \'php_error\',  ' . $error_id . ')" class="btn-warning">Udskyd</button>';
+        $tools[] = '<button data-state="ready" data-action="" onclick="pro_postpone($(this), \'php_error\',  ' . $error_id . ')" data-toggle="tooltip" data-placement="bottom" title="Udskyd error" class="handling-btn btn-warning glyphicon glyphicon-time"></button>';
+        //"udvid postering" trigger
+        $tools[] = '<button data-state="ready" data-action=""onclick="pro_approve($(this), \'php_error\',  ' . $error_id . ')" data-toggle="tooltip" data-placement="bottom" title="Se stack trace" class="handling-btn btn-info glyphicon glyphicon-info-sign"></button>';
         //"Godkend postering" trigger
-        $tools[] = '<button data-state="ready" data-action=""onclick="pro_approve($(this), \'php_error\',  ' . $error_id . ')" class="btn-success">Godkend</button>';
-
+        $tools[] = '<button data-state="ready" data-action=""onclick="pro_approve($(this), \'php_error\',  ' . $error_id . ')" data-toggle="tooltip" data-placement="bottom" title="Godkend error" class="handling-btn btn-success glyphicon glyphicon-ok"></button>';
+ 
         $row['Handling'] = implode(' ', $tools);
 
         $finished[$error_id] = $row;
