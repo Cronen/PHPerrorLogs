@@ -16,19 +16,20 @@ nav a:hover, a:visited, a:link, a:active
     color:white;
 }
 
-.overview-table
-{
+.table-responsive
+{  
     text-align: center;
 }
 
-.overview-table th
+.table-responsive th
 {
     background-color: black;
     color:white;
     text-align: center;
+   
 }
 
 #wrapper-content
 {
-  background-color: grey;
+  
 }

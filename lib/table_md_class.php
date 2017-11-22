@@ -30,7 +30,7 @@ class table_md_class
 		foreach($arrays as $index => $array)
 			$rows[] = $this->makeRow($array, $index);
 		
-		$html = '<table class="table table-inverse table-responsive">'.implode('', $rows).'</table>';
+		$html = '<table class="table table-responsive">'.implode('', $rows).'</table>';
 		
 		return $html;
 	}

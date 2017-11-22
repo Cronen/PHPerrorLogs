@@ -52,6 +52,8 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
     
     //Tjekker fra REQUEST['sort'] hvad der skal sorteres efter. 
     $sort_by = $_REQUEST['sort'];
+    
+    //Tjekker fra REQUEST['order'] om der sorteres efter asc eller desc
     $order_by = $_REQUEST['order'];
     
     //indhent data ud fra sorteringsvalg
@@ -70,7 +72,6 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
         ORDER BY ".$sort_by." ".$order_by."
         LIMIT 5;";
 
-    echo $table_sql;
 
     //Lav tabel med indhentet data
     $table_data = $data->makeArray($table_sql);

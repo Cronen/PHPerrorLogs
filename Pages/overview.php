@@ -12,7 +12,8 @@
 
 <br>
 
-<div class="container-fluid overview-table">
-    <div id="test" class="col-md-12">
-    </div>
+
+<div id="test" class="table-responsive col-md-12">
+    
 </div>
+
