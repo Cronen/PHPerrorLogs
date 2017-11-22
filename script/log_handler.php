@@ -38,11 +38,11 @@ while (true) {
         continue;
     }
 
-    preg_match('/(?<=\[).+?(?=\])/', $line_in_file, $DATO);
-    preg_match('/(?<=\:  ).+?(?=\ in )/', $line_in_file, $MSG);
+    preg_match('/(?<=\[).+?(?=\])/sU', $line_in_file, $DATO);
+    preg_match('/(?<=\:  ).+?(?=\ in )/sU', $line_in_file, $MSG);
     preg_match('/\s.:\\\\.*\\\\/', $line_in_file, $filepath);
-    preg_match('/[a-zA-Z0-9\_\-]*.php /', $line_in_file, $filename);
-    preg_match('/(?<= on line )[0-9]*/', $line_in_file, $errorline);
+    preg_match('/[a-zA-Z0-9\_\-]*.php/s', $line_in_file, $filename);
+    preg_match('/(?<= on line )[0-9]*/s', $line_in_file, $errorline);
 
     if ((is_numeric($errrorstring[2]) && $currentError != NULL)) {
 
@@ -59,10 +59,28 @@ while (true) {
     }
 
     if (empty($DATO) || empty($ERROR) || empty($MSG) || empty($filepath) || empty($filename) || empty($errorline)) {
-        //Kontrol af tomme arrays fra reqex. Disse skal der ses nærmere på, derfor printet. 
-        array_push($lines_not_handled, $line_in_file);
+        // Tjekker om en fejl, kan være spredt over 2 linjer, hvis ikke alle arrays er udfyldt
+        
+        $testline = NULL;
+        $teststacktracesearch = array();
+        $testline = $line_in_file . fgets($file);
+        echo "TESTLINE: ".$testline."</br>";
+        
+        preg_match('/(?<=\[).+?(?=\])/sU', $testline, $DATO);
+        preg_match('/(?<=\:  ).+?(?=\ in )/sU', $testline, $MSG);
+        preg_match('/\s.:\\\\.*\\\\/', $testline, $filepath);
+        preg_match('/[a-zA-Z0-9\_\-]*.php/s', $testline, $filename);
+        preg_match('/(?<= on line )[0-9]*/s', $testline, $errorline);
+        
+        // og tjekker derefter igen og udfylder de samme arrays.
+        // Hvis arrays'ne stadig ikke er udfyldt, bliver det en erklæret en ukendt fejl.
+        if (empty($DATO) || empty($ERROR) || empty($MSG) || empty($filepath) || empty($filename) || empty($errorline))
+        {
+     
+        array_push($lines_not_handled,$line_in_file, $testline);
         $currentError = NULL;
         continue;
+        }
     }
     $filepath[0] = reverse_backslash($filepath[0]);
     $MSG[0] = reverse_backslash($MSG[0]);
@@ -93,7 +111,9 @@ function save_to_database($php_error_array) {
     $db = new db_md();
     $inserts = 0;
     foreach ($php_error_array as $errorobject) {
+        
         $inserts += $errorobject->add_to_db($db);
+       
     }
     return $inserts;
 }
