@@ -1,7 +1,12 @@
 <?php
 
+$time_pre = microtime(true);
+
 include_once ($_SERVER['DOCUMENT_ROOT'] . '\lib\phperror_class.php');
 include_once ($_SERVER['DOCUMENT_ROOT'] . '\lib\stack_trace_class.php');
+include_once ($_SERVER['DOCUMENT_ROOT'] . "/protected/configuration.php");
+include_once ($_SERVER['DOCUMENT_ROOT'] . "/lib/db_class.php");
+include_once ($_SERVER['DOCUMENT_ROOT'] . "/lib/function_lib_shared.php");
 
 //This should be handled as a script. This will be implementet later
 $file = fopen('php_error.log', 'r');
@@ -62,28 +67,33 @@ while (true) {
     }
     $filepath[0] = reverse_backslash($filepath[0]);
     $MSG[0] = reverse_backslash($MSG[0]);
-    $currentError = new phperror($DATO[0], $ERROR[0], str_replace("'","''",$MSG[0]), $filepath[0], $filename[0], $errorline[0]);
+    $currentError = new phperror($DATO[0], $ERROR[0], str_replace("'", "''", $MSG[0]), $filepath[0], $filename[0], $errorline[0]);
 
     array_push($errorArray, $currentError);
 }
+$db = new db_md();
+sleep(11);
 
-add_to_DB($errorArray);
+$number__of_inserts = add_to_DB($errorArray, $db);
+$time_post = microtime(true);
+$exec_time = $time_post - $time_pre;
 
+write_log_to_db($db, $number__of_inserts, $exec_time, $counter);
 exit;
 
-function add_to_DB($php_error_array) {
-    include( $_SERVER['DOCUMENT_ROOT'] . "/protected/configuration.php");
-    include( $_SERVER['DOCUMENT_ROOT'] . "/lib/db_class.php");
-    include( $_SERVER['DOCUMENT_ROOT'] . "/lib/function_lib_shared.php");
-    $db = new db_md();
-    $cunt = 0;
+function add_to_DB($php_error_array, $db) {
+    $inserts = 0;
     foreach ($php_error_array as $errorobject) {
-        $cunt++;
-        $errorobject->add_to_db($db);
-        if ($cunt >= 10) {
-            break;
-        }
+        
+        //$inserts += $errorobject->add_to_db($db);
+       
     }
+    return $inserts;
+}
+
+function write_log_to_db($db, $insert_number, $exec_time, $counter) {
+    $sql_insert_string = "INSERT INTO log (`run_time`, `number_of_lines`, `number_of_inserts`) VALUES ('$exec_time', '$counter', '$insert_number')";
+    $db->addData($sql_insert_string);
 }
 
 function reverse_backslash($instring) {

@@ -48,6 +48,8 @@ class phperror {
                     $stack_trace->add_to_db($db, $error_id[0]['error_ID']);
                 }
             }
+        } else {
+            //update object time. 
         }
         return $number__of_inserts;
     }

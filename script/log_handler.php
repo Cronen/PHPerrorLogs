@@ -4,6 +4,9 @@ set_time_limit(900);
 $time_pre = microtime(true);
 include_once ($_SERVER['DOCUMENT_ROOT'] . '\lib\phperror_class.php');
 include_once ($_SERVER['DOCUMENT_ROOT'] . '\lib\stack_trace_class.php');
+include_once ($_SERVER['DOCUMENT_ROOT'] . "/protected/configuration.php");
+include_once ($_SERVER['DOCUMENT_ROOT'] . "/lib/db_class.php");
+include_once ($_SERVER['DOCUMENT_ROOT'] . "/lib/function_lib_shared.php");
 
 $file = fopen('php_error.log', 'r');
 //Skip first line - its a line to create error log file
@@ -60,26 +63,25 @@ while (true) {
 
     if (empty($DATO) || empty($ERROR) || empty($MSG) || empty($filepath) || empty($filename) || empty($errorline)) {
         // Tjekker om en fejl, kan være spredt over 2 linjer, hvis ikke alle arrays er udfyldt
-        
+
         $testline = NULL;
         $teststacktracesearch = array();
         $testline = $line_in_file . fgets($file);
-        echo "TESTLINE: ".$testline."</br>";
-        
+        echo "TESTLINE: " . $testline . "</br>";
+
         preg_match('/(?<=\[).+?(?=\])/sU', $testline, $DATO);
         preg_match('/(?<=\:  ).+?(?=\ in )/sU', $testline, $MSG);
         preg_match('/\s.:\\\\.*\\\\/', $testline, $filepath);
         preg_match('/[a-zA-Z0-9\_\-]*.php/s', $testline, $filename);
         preg_match('/(?<= on line )[0-9]*/s', $testline, $errorline);
-        
+
         // og tjekker derefter igen og udfylder de samme arrays.
         // Hvis arrays'ne stadig ikke er udfyldt, bliver det en erklæret en ukendt fejl.
-        if (empty($DATO) || empty($ERROR) || empty($MSG) || empty($filepath) || empty($filename) || empty($errorline))
-        {
-     
-        array_push($lines_not_handled,$line_in_file, $testline);
-        $currentError = NULL;
-        continue;
+        if (empty($DATO) || empty($ERROR) || empty($MSG) || empty($filepath) || empty($filename) || empty($errorline)) {
+
+            array_push($lines_not_handled, $line_in_file, $testline);
+            $currentError = NULL;
+            continue;
         }
     }
     $filepath[0] = reverse_backslash($filepath[0]);
@@ -88,34 +90,35 @@ while (true) {
 
     array_push($errorArray, $currentError);
 }
-
-$number__of_inserts = save_to_database($errorArray);
+$db = new db_md();
+$number_of_inserts = save_to_database($errorArray, $db);
 $time_post = microtime(true);
 $exec_time = $time_post - $time_pre;
 
-echo  date('Y-m-d H:i:s')." - Script done!\n";
-if (!empty($lines_not_handled)) {
-    echo "The following lines where not handled:\n";
-    foreach ($lines_not_handled as $line) {
-        echo "$line";
-    }
-}
-echo "executiontime $exec_time for $counter lines\n";
-echo "$number__of_inserts inserted into DB\n";
+write_log_to_db($db, $number_of_inserts, $exec_time, $counter, $lines_not_handled);
+
+echo date('Y-m-d H:i:s') . " - Script done!\n";
 exit;
 
-function save_to_database($php_error_array) {
-    include( $_SERVER['DOCUMENT_ROOT'] . "/protected/configuration.php");
-    include( $_SERVER['DOCUMENT_ROOT'] . "/lib/db_class.php");
-    include( $_SERVER['DOCUMENT_ROOT'] . "/lib/function_lib_shared.php");
-    $db = new db_md();
+function save_to_database($php_error_array, $db) {
     $inserts = 0;
     foreach ($php_error_array as $errorobject) {
-        
         $inserts += $errorobject->add_to_db($db);
-       
     }
     return $inserts;
+}
+
+function write_log_to_db($db, $insert_number, $exec_time, $counter, $unhandled_errors) {
+    $sql_insert_string = "INSERT INTO log (`run_time`, `number_of_lines`, `number_of_inserts`) VALUES ('$exec_time', '$counter', '$insert_number')";
+    $db->addData($sql_insert_string);
+
+    if (!empty($unhandled_errors)) {
+        echo "The following lines where not handled:\n";
+        foreach ($unhandled_errors as $line) {
+            echo "$line";
+            //skal skrives til db
+        }
+    }
 }
 
 function reverse_backslash($instring) {
