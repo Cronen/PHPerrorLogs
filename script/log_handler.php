@@ -113,9 +113,8 @@ function write_log_to_db($db, $insert_number, $exec_time, $counter, $unhandled_e
     $db->addData($sql_insert_string);
 
     if (!empty($unhandled_errors)) {
-        echo "The following lines where not handled:\n";
         foreach ($unhandled_errors as $line) {
-            echo "$line";
+            //echo "$line";
             //skal skrives til db
         }
     }

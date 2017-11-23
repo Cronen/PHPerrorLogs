@@ -26,19 +26,14 @@ class phperror {
     function add_to_DB($db) {
         $number__of_inserts = 0;
         //finder error level i tal
-        $level = "SELECT level_ID FROM error_levels WHERE level = '$this->error_level'";
-        $extend_date = "";
-        $sql_select_string = "SELECT error_ID FROM php_error "
-                . "WHERE $extend_date php_error_level = ($level) AND error_msg = '$this->error_msg' AND "
-                . "error_location = '$this->error_location ' AND error_file = '$this->error_file' AND error_line = '$this->error_line';";
-        $error_id = $db->makeArray($sql_select_string);
-        //echo $sql_select_string;
+        
+        $error_id = $db->makeArray($this->sql_select_string(false));
         if (empty($error_id[0])) {
             $sql_insert_string = "INSERT INTO `php_error` (`error_date`, `php_error_level`, `error_msg`, `error_location`, `error_file`, `error_line`) "
-                    . "VALUES ('$this->error_date', ($level), '$this->error_msg', '$this->error_location ','$this->error_file', '$this->error_line')";
+                    . "VALUES ('$this->error_date', (SELECT level_ID FROM error_levels WHERE level = '$this->error_level'), '$this->error_msg', '$this->error_location ','$this->error_file', '$this->error_line')";
             $success = $db->addData($sql_insert_string);
-            $extend_date = "error_date = '$this->error_date' AND";
-            $error_id = $db->makeArray($sql_select_string);
+
+            $error_id = $db->makeArray($this->sql_select_string(true));
             //adds stack trace
             if ($success == true) {
                 $number__of_inserts++;
@@ -49,7 +44,12 @@ class phperror {
                 }
             }
         } else {
-            //update object time. 
+            //update phperror's datetime in db.
+            $new_error_id = $db->makeArray($this->sql_select_string(true));
+            if (empty($new_error_id[0])) {
+                $sql_update_string = "UPDATE php_error SET error_date = '$this->error_date' WHERE php_error.error_ID = " . $error_id[0]['error_ID'];
+                $db->addData($sql_update_string);
+            }
         }
         return $number__of_inserts;
     }
@@ -67,6 +67,19 @@ class phperror {
             }
         }
         return $returnString;
+    }
+    //function to create sql select statement. This is to avoid long repeated code and make the code more readable
+    function sql_select_string($with_without_date) {
+        $extend_date = "";
+        if ($with_without_date === true) {
+            $extend_date = "error_date = '$this->error_date' AND";
+        } 
+        $level = "SELECT level_ID FROM error_levels WHERE level = '$this->error_level'";
+        $sql_select_string = "SELECT error_ID FROM php_error "
+                . "WHERE $extend_date php_error_level = ($level) AND error_msg = '$this->error_msg' AND "
+                . "error_location = '$this->error_location ' AND error_file = '$this->error_file' AND error_line = '$this->error_line';";
+
+        return $sql_select_string;
     }
 
 }
