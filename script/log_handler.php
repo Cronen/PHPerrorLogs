@@ -126,7 +126,7 @@ $number_of_inserts = save_to_database($errorArray, $db);
 $time_post = microtime(true);
 $exec_time = $time_post - $time_pre;
 
-//write_log_to_db($db, $number_of_inserts, $exec_time, $counter, $lines_not_handled);
+write_log_to_db($db, $number_of_inserts, $exec_time, $counter, $lines_not_handled);
 
 echo date('Y-m-d H:i:s') . " - Script done!\n";
 foreach ($lines_not_handled as $value) {
@@ -137,8 +137,8 @@ exit;
 function save_to_database($php_error_array, $db) {
     $inserts = 0;
     foreach ($php_error_array as $errorobject) {
-        //$inserts += $errorobject->add_to_db($db);
-        echo $errorobject;
+        $inserts += $errorobject->add_to_db($db);
+        //echo $errorobject;
     }
     return $inserts;
 }
