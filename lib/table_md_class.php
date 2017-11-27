@@ -26,8 +26,13 @@ class table_md_class {
 
         //make rows
         foreach ($arrays as $index => $array)
+        {
+            
             $rows[] = $this->makeRow($array, $index);
-
+            //tilføjer tr til stacktrace
+            $rows[] = '<tr class="stack-trace-row"> <td id="stack-trace-td" class="stack-trace-row'.$index.'" style="display:none" colspan="8"></td> </tr>';
+        }
+            
         $html = '<table class="table table-responsive">' . implode('', $rows) . '</table>';
 
         return $html;
@@ -39,8 +44,9 @@ class table_md_class {
             $cells[] = '<td >' . $value . '</td>';
         }
         $id = ($this->use_index_as_id) ? $this->id . '' . $index : NULL;
+        
         $row = '<tr id="' . $id . '">' . implode('', $cells) . '</tr>';
-
+        
         return $row;
     }
 

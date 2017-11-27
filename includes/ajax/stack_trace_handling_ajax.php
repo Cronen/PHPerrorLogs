@@ -1,7 +1,9 @@
 <?php
 
 session_start();
-$error_id = 16; //$_REQUEST['error_id'];
+
+$error_id = $_REQUEST['error_id'];
+
 //set timezone
 date_default_timezone_set("Europe/Copenhagen");
 
@@ -18,13 +20,42 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in'] == true) {
     exit;
 }
 
-if ($error_id != NULL) {
-    $data = new db_md();
-    $sql = "SELECT trace_number, trace_msg, trace_location, trace_file, trace_line FROM stack_trace WHERE error_ref_ID = $error_id";
-    $stack_trace_array = $data->makeArray($sql);
-
-    print_r($stack_trace_array);
-} else {
-   //Der er sket en fejl, do something about it. 
+if ($error_id == NULL) {
+    echo "Fejlmeddelelse: error_id kan ikke findes";
+    exit;
 }
+
+//SELECT stacktrace for given error
+$data = new db_md();
+ $tablemkr = new table_md_class();
+$table_sql = "
+            SELECT 
+            trace_number, 
+            trace_msg, 
+            trace_location, 
+            trace_file, 
+            trace_line 
+            FROM stack_trace 
+            WHERE error_ref_ID = $error_id";
+
+$table_data = $data->makeArray($table_sql);
+
+
+foreach ($table_data as $array) {
+    
+    
+    $finished[]= $array;
+
+}
+
+$html[] = $tablemkr->makeTable($finished);
+
+//render
+//echo implode('', $html);
+$test  =  implode('', $html);
+
+echo "<table>".$test."</table>";
+
+
+
 

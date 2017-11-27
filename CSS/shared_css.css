@@ -34,3 +34,18 @@ nav a:hover, a:visited, a:link, a:active
     height:25px;
     width:35px;
 }
+
+.stack-trace-row th
+{
+    background-color: orange;
+    color:black;
+}
+.stack-trace-row td
+{
+    background-color: red;
+    color:black;
+}
+#stack-trace-td
+{
+        background-color: white;
+}

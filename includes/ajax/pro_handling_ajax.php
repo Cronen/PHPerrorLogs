@@ -78,6 +78,7 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
 
     $finished = array();
     foreach ($table_data as $array) {
+        
         //Har navngivet error_id til ID i mit sqlkald, derfor bruger jeg her 'ID'
         $error_id = $array['ID'];
         $row = $array;
@@ -89,8 +90,8 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
         $tools[] = '<button data-state="ready" data-action="pro_delete" onclick="pro_delete($(this), \'php_error\',  ' . $error_id . ')" data-toggle="tooltip" data-placement="bottom" title="Slet postering" class="handling-btn btn-danger glyphicon glyphicon-trash"></button>';
         //"Udskyd postering" trigger
         $tools[] = '<button data-state="ready" data-action="" onclick="pro_postpone($(this), \'php_error\',  ' . $error_id . ')" data-toggle="tooltip" data-placement="bottom" title="Udskyd error" class="handling-btn btn-warning glyphicon glyphicon-time"></button>';
-        //"udvid postering" trigger
-        $tools[] = '<button data-state="ready" data-action=""onclick="pro_approve($(this), \'php_error\',  ' . $error_id . ')" data-toggle="tooltip" data-placement="bottom" title="Se stack trace" class="handling-btn btn-info glyphicon glyphicon-info-sign"></button>';
+        //"Se stack trace" trigger
+        $tools[] = '<button data-state="ready" data-action=""onclick="pro_expand($(this), ' . $error_id . ')" data-toggle="tooltip" data-placement="bottom" title="Se stack trace" class="handling-btn btn-info glyphicon glyphicon-info-sign"></button>';
         //"Godkend postering" trigger
         $tools[] = '<button data-state="ready" data-action=""onclick="pro_approve($(this), \'php_error\',  ' . $error_id . ')" data-toggle="tooltip" data-placement="bottom" title="Godkend error" class="handling-btn btn-success glyphicon glyphicon-ok"></button>';
  
