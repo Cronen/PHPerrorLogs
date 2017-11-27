@@ -13,7 +13,7 @@
 <br>
 
 
-<div id="test" class="table-responsive col-md-12">
+<div class="content-wrapper col-md-12">
     
 </div>
 
