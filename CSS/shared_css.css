@@ -16,13 +16,13 @@ nav a:hover, a:visited, a:link, a:active
     color:white;
 }
 
-.table-responsive
+.table
 {  
     text-align: center;
     white-space: nowrap;
 }
 
-.table-responsive th
+.table th
 {
     background-color: black;
     color:white;
