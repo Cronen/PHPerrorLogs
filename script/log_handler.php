@@ -39,7 +39,9 @@ while (true) {
             continue;
         }
     } else {
-        array_push($lines_not_handled, $line_in_file);
+        if (count($line_in_file) >= 2) {
+            array_push($lines_not_handled, $line_in_file);
+        }
         continue;
     }
 
