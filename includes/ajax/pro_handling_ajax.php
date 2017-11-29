@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 //set timezone
@@ -20,13 +19,12 @@ if (!$_SESSION['logged_in'] == true) {
 /*
  * * pro_delete
  */
-
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_delete") {
 
     $sqlDelete = "DELETE FROM php_error WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
     $delete = new db_md();
     $delRes = $delete->addData($sqlDelete);
-    
+
     if ($delRes == true) {
         echo "Postering er slettet";
     } else {
@@ -49,13 +47,13 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
     foreach ($arrays as $array) {
         $erlvs[$array['error_ID']][] = $array;
     }
-    
+
     //Tjekker fra REQUEST['sort'] hvad der skal sorteres efter. 
     $sort_by = $_REQUEST['sort'];
-    
+
     //Tjekker fra REQUEST['order'] om der sorteres efter asc eller desc
     $order_by = $_REQUEST['order'];
-    
+
     //indhent data ud fra sorteringsvalg
     $table_sql = "
         SELECT 
@@ -69,7 +67,7 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
         php_error.error_line AS Linje
         FROM php_error 
         INNER JOIN error_levels ON php_error.php_error_level = error_levels.level_ID
-        ORDER BY ".$sort_by." ".$order_by."
+        ORDER BY " . $sort_by . " " . $order_by . "
         LIMIT 5;";
 
 
@@ -78,7 +76,7 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
 
     $finished = array();
     foreach ($table_data as $array) {
-        
+
         //Har navngivet error_id til ID i mit sqlkald, derfor bruger jeg her 'ID'
         $error_id = $array['ID'];
         $row = $array;
@@ -87,22 +85,49 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
         $tools = array();
 
         //"slet postering" trigger
-        $tools[] = '<button data-state="ready" data-action="pro_delete" onclick="pro_delete($(this), \'php_error\',  ' . $error_id . ')" data-toggle="tooltip" data-placement="bottom" title="Slet postering" class="handling-btn btn-danger glyphicon glyphicon-trash"></button>';
+        $tools[] = '<button data-state="ready" data-action="pro_delete" onclick="pro_delete($(this), \'php_error\',  ' . $error_id . ')"  data-placement="bottom" title="Slet postering" class="handling-btn btn-danger glyphicon glyphicon-trash"></button>';
         //"Udskyd postering" trigger
-        $tools[] = '<button data-state="ready" data-action="" onclick="pro_postpone($(this), \'php_error\',  ' . $error_id . ')" data-toggle="tooltip" data-placement="bottom" title="Udskyd error" class="handling-btn btn-warning glyphicon glyphicon-time"></button>';
+        $tools[] = '<button type="button" data-state="ready" data-action="" onclick="pro_postpone($(this))" data-target="#postponeModal" data-toggle="modal" data-placement="bottom" title="Udskyd error" class="handling-btn btn-warning glyphicon glyphicon-time"></button>';
         //"Se stack trace" trigger
-        $tools[] = '<button data-state="ready" data-action=""onclick="pro_expand($(this), ' . $error_id . ')" data-toggle="tooltip" data-placement="bottom" title="Se stack trace" class="handling-btn btn-info glyphicon glyphicon-info-sign"></button>';
+        $tools[] = '<button data-state="ready" data-action=""onclick="pro_expand($(this), ' . $error_id . ')" data-placement="bottom" title="Se stack trace" class="handling-btn btn-info glyphicon glyphicon-info-sign"></button>';
         //"Godkend postering" trigger
-        $tools[] = '<button data-state="ready" data-action=""onclick="pro_approve($(this), \'php_error\',  ' . $error_id . ')" data-toggle="tooltip" data-placement="bottom" title="Godkend error" class="handling-btn btn-success glyphicon glyphicon-ok"></button>';
- 
+        $tools[] = '<button data-state="ready" data-action=""onclick="pro_approve($(this), \'php_error\',  ' . $error_id . ')" data-placement="bottom" title="Godkend error" class="handling-btn btn-success glyphicon glyphicon-ok"></button>';
+
         $row['Handling'] = implode(' ', $tools);
 
         $finished[$error_id] = $row;
     }
 
     $html[] = $tablemkr->makeTable($finished);
-
     //render
     echo implode('', $html);
 }
+
+if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_postpone')) {
+    
+    $postponeModal = '
+    <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Hvor mange dage vil du udskyde error med?</h4>
+      </div>
+      <div class="modal-body">
+          <center>
+          <button class="btn-primary">1 dag</button>
+          <button class="btn-primary">7 dage</button>
+          <button class="btn-primary">30 dage</button>
+          </center>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Luk</button>
+      </div>
+    </div>
+
+  </div>';
+    echo $postponeModal;
+}
+
 ?>

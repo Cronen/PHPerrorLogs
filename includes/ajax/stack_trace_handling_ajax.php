@@ -51,7 +51,6 @@ foreach ($table_data as $array) {
 $html[] = $tablemkr->makeTable($finished);
 
 //render
-//echo implode('', $html);
 $test  =  implode('', $html);
 
 echo "<table>".$test."</table>";

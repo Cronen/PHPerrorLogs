@@ -17,3 +17,7 @@
     
 </div>
 
+<!-- Modal -->
+<div id="postponeModal" class="modal fade" role="dialog">
+  
+</div>
