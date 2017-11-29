@@ -54,6 +54,7 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
 
     //Tjekker fra REQUEST['order'] om der sorteres efter asc eller desc
     $order_by = $_REQUEST['order'];
+    //variable for dagsdato
     $today = date('Y-m-d');
     //indhent data ud fra sorteringsvalg
     $table_sql = "
@@ -156,7 +157,7 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_postpone')) {
     $success = $data->addData($update_sql);
 
     if ($success) {
-        echo "Fejl udskudt med '$postpone_days' dage";
+        echo "Fejl udskudt med $postpone_days dag(e)";
     } else {
         echo "Der skete en fejl. Kan ikke udskyde dato";
     }
