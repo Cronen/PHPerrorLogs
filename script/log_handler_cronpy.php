@@ -23,14 +23,7 @@ while (true) {
         break;
     }
     $errrorstring = null;
-    $DATO = array();
     $ERROR = array();
-    $MSG = array();
-    $filePathName = array();
-    $filepath = array();
-    $filename = array();
-    $errorline = array();
-
 
     preg_match('/(?<=PHP\s).*?(?=\:)/', $line_in_file, $ERROR);
     if (!empty($ERROR)) {
