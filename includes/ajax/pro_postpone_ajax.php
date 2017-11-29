@@ -27,7 +27,6 @@ if ($error_id == NULL || $postpone_days == NULL) {
 $postpone_date = date('Y-m-d', strtotime("+$postpone_days days"));
 //SELECT stacktrace for given error
 $data = new db_md();
-$tablemkr = new table_md_class();
 $update_sql = "
     UPDATE php_error 
     SET postpone = '$postpone_date' 
