@@ -39,12 +39,11 @@ while (true) {
             continue;
         }
     } else {
-        if (count($line_in_file) >= 2) {
+        if (strlen($line_in_file) >= 3) {
             array_push($lines_not_handled, $line_in_file);
         }
         continue;
     }
-
     if ((is_numeric($errrorstring[2]) && $currentError != NULL)) {
 
         $stacktracesearch = array();
@@ -58,65 +57,26 @@ while (true) {
         $currentError->add_stack_trace($stackTrace);
         continue;
     }
+    $php_error = array();
+    preg_match('/\[(.+?)\]\sPHP\s([A-z\s]+):\s+(.*)\sin\s(\w+:.*\\\\)(.*)\son\sline\s(\d+)/sU', $line_in_file, $php_error);
 
-    preg_match('/(?<=\[).+?(?=\])/sU', $line_in_file, $DATO);
-    preg_match('/(?<=\:  ).+?(?=\ in )/sU', $line_in_file, $MSG);
-    //preg_match('/\s.:\\\\.*\\\\/', $line_in_file, $filepath);
-    //preg_match('/[a-zA-Z0-9\_\-]*.php/s', $line_in_file, $filename);
-    preg_match_all('/(in\s)([a-zA-Z_.-]*:\\\\.*\\\\)([a-zA-Z0-9\_\-]*.\.[a-zA-Z0-9_-]*?)/sU', $line_in_file, $filePathName, PREG_SET_ORDER);
-    //preg_match('/(?<= on line )[0-9]*/s', $line_in_file, $errorline);
-    preg_match_all('/(?<= on line )[0-9]*/s', $line_in_file, $errorline, PREG_SET_ORDER);
-
-
-
-    if (!empty($filePathName)) {
-
-        $filepath[0] = end($filePathName)[2];
-        $filename[0] = end($filePathName)[3];
-    }
-    if (!empty($errorline)) {
-
-        $errorline[0] = end($errorline)[0];
-    }
-
-    if (empty($DATO) || empty($ERROR) || empty($MSG) || empty($filepath) || empty($filename) || empty($errorline)) {
-        // Tjekker om en fejl, kan være spredt over 2 linjer, hvis ikke alle arrays er udfyldt
-
-        $testline = NULL;
-        $teststacktracesearch = array();
-        $testline = $line_in_file . fgets($file);
-
-        preg_match('/(?<=\[).+?(?=\])/sU', $testline, $DATO);
-        preg_match('/(?<=\:  ).+?(?=\ in )/sU', $testline, $MSG);
-        //preg_match('/\s.:\\\\.*\\\\/', $testline, $filepath);
-        //preg_match('/[a-zA-Z0-9\_\-]*.php/s', $testline, $filename);
-        preg_match_all('/(in\s)([a-zA-Z_.-]*:\\\\.*\\\\)([a-zA-Z0-9\_\-]*.\.[a-zA-Z0-9_-]*?)/sU', $testline, $filePathName, PREG_SET_ORDER);
-        //preg_match('/(?<= on line )[0-9]*/s', $testline, $errorline);
-        preg_match_all('/(?<= on line )[0-9]*/s', $testline, $errorline, PREG_SET_ORDER);
-
-        if (!empty($filePathName)) {
-
-            $filepath[0] = end($filePathName)[2];
-            $filename[0] = end($filePathName)[3];
+    if (count($php_error) != 7) {
+        $nextline = fgets($file);
+        if (strlen($nextline) <= 2) {
+            $nextline = fgets($file);
         }
-        if (!empty($errorline)) {
-            $errorline[0] = end($errorline)[0];
-        }
-
-        // og tjekker derefter igen og udfylder de samme arrays.
-        // Hvis arrays'ne stadig ikke er udfyldt, bliver det en erklæret en ukendt fejl.
-        if (empty($DATO) || empty($ERROR) || empty($MSG) || empty($filepath) || empty($filename) || empty($errorline)) {
-
+        $testline = $line_in_file . $nextline;
+        preg_match('/\[(.+?)\]\sPHP\s([A-z\s]+):\s+(.*)\sin\s(\w+:.*\\\\)(.*)\son\sline\s(\d+)/sU', $testline, $php_error);
+        if (count($php_error) != 7) {
             array_push($lines_not_handled, $line_in_file, $testline);
             $currentError = NULL;
             continue;
         }
     }
 
-    $filepath[0] = reverse_backslash($filepath[0]);
-    $MSG[0] = reverse_backslash($MSG[0]);
-    $currentError = new phperror($DATO[0], $ERROR[0], str_replace("'", "''", $MSG[0]), $filepath[0], $filename[0], $errorline[0]);
-
+    $filepath = reverse_backslash($php_error[4]);
+    $MSG = reverse_backslash($php_error[3]);
+    $currentError = new phperror($php_error[1], $php_error[2], str_replace("'", "''", $MSG), $filepath, $php_error[5], $php_error[6]);
     array_push($errorArray, $currentError);
 }
 $db = new db_md();
@@ -124,19 +84,16 @@ $number_of_inserts = save_to_database($errorArray, $db);
 $time_post = microtime(true);
 $exec_time = $time_post - $time_pre;
 
-//write_log_to_db($db, $number_of_inserts, $exec_time, $counter, $lines_not_handled);
+write_log_to_db($db, $number_of_inserts, $exec_time, $counter, $lines_not_handled);
 
 echo date('Y-m-d H:i:s') . " - Script done!\n";
-foreach ($lines_not_handled as $value) {
-    echo 'Lines not handled: ' . $value;
-}
 exit;
 
 function save_to_database($php_error_array, $db) {
     $inserts = 0;
     foreach ($php_error_array as $errorobject) {
         //$inserts += $errorobject->add_to_db($db);
-        //echo $errorobject;
+        //print_r($errorobject);
     }
     return $inserts;
 }
