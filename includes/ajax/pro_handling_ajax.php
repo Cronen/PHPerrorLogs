@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 //set timezone
@@ -87,9 +88,9 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
         //"slet postering" trigger
         $tools[] = '<button data-state="ready" data-action="pro_delete" onclick="pro_delete($(this), \'php_error\',  ' . $error_id . ')"  data-placement="bottom" title="Slet postering" class="handling-btn btn-danger glyphicon glyphicon-trash"></button>';
         //"Udskyd postering" trigger
-        $tools[] = '<button type="button" data-state="ready" data-action="" onclick="pro_postpone($(this))" data-target="#postponeModal" data-toggle="modal" data-placement="bottom" title="Udskyd error" class="handling-btn btn-warning glyphicon glyphicon-time"></button>';
+        $tools[] = '<button type="button" data-state="ready" onclick="pro_modal($(this), ' . $error_id . ')" data-target="#postponeModal" data-toggle="modal" data-placement="bottom" title="Udskyd error" class="handling-btn btn-warning glyphicon glyphicon-time"></button>';
         //"Se stack trace" trigger
-        $tools[] = '<button data-state="ready" data-action=""onclick="pro_expand($(this), ' . $error_id . ')" data-placement="bottom" title="Se stack trace" class="handling-btn btn-info glyphicon glyphicon-info-sign"></button>';
+        $tools[] = '<button data-state="ready" data-action="" onclick="pro_expand($(this), ' . $error_id . ')" data-placement="bottom" title="Se stack trace" class="handling-btn btn-info glyphicon glyphicon-info-sign"></button>';
         //"Godkend postering" trigger
         $tools[] = '<button data-state="ready" data-action=""onclick="pro_approve($(this), \'php_error\',  ' . $error_id . ')" data-placement="bottom" title="Godkend error" class="handling-btn btn-success glyphicon glyphicon-ok"></button>';
 
@@ -103,8 +104,8 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
     echo implode('', $html);
 }
 
-if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_postpone')) {
-    
+if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_modal')) {
+
     $postponeModal = '
     <div class="modal-dialog">
 
@@ -116,9 +117,9 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_postpone')) {
       </div>
       <div class="modal-body">
           <center>
-          <button class="btn-primary">1 dag</button>
-          <button class="btn-primary">7 dage</button>
-          <button class="btn-primary">30 dage</button>
+          <button class="btn-primary" onclick="pro_postpone($(this), ' . $_REQUEST['tbl_id'] . ', 1)">1 dag</button>
+          <button class="btn-primary" onclick="pro_postpone($(this), ' . $_REQUEST['tbl_id'] . ', 7)">7 dage</button>
+          <button class="btn-primary" onclick="pro_postpone($(this), ' . $_REQUEST['tbl_id'] . ', 30)">30 dage</button>
           </center>
       </div>
       <div class="modal-footer">
@@ -127,7 +128,36 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_postpone')) {
     </div>
 
   </div>';
+
     echo $postponeModal;
 }
 
+if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_postpone')) {
+    
+    $tbl_id = $_REQUEST['tbl_id'];
+    $postpone_days = $_REQUEST['postpone_days'];
+    
+    //Check if variables are empty
+    if ($tbl_id == NULL || $postpone_days == NULL) {
+        echo "Fejlmeddelelse: Manglende variabler";
+        exit;
+    }
+    
+    $postpone_date = date('Y-m-d', strtotime("+$postpone_days days"));
+
+    //UPDATE dato
+    $data = new db_md();
+    $update_sql = "
+    UPDATE php_error 
+    SET postpone = '$postpone_date' 
+    WHERE php_error.error_ID = '$tbl_id'";
+
+    $success = $data->addData($update_sql);
+
+    if ($success) {
+        echo "Fejl udskudt med '$postpone_days' dage";
+    } else {
+        echo "Der skete en fejl. Kan ikke udskyde dato";
+    }
+}
 ?>
