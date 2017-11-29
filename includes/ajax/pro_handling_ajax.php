@@ -54,7 +54,7 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
 
     //Tjekker fra REQUEST['order'] om der sorteres efter asc eller desc
     $order_by = $_REQUEST['order'];
-
+    $today = date('Y-m-d');
     //indhent data ud fra sorteringsvalg
     $table_sql = "
         SELECT 
@@ -68,6 +68,7 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
         php_error.error_line AS Linje
         FROM php_error 
         INNER JOIN error_levels ON php_error.php_error_level = error_levels.level_ID
+        WHERE postpone IS NULL OR  postpone  <='$today' 
         ORDER BY " . $sort_by . " " . $order_by . "
         LIMIT 5;";
 
@@ -133,16 +134,16 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_modal')) {
 }
 
 if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_postpone')) {
-    
+
     $tbl_id = $_REQUEST['tbl_id'];
     $postpone_days = $_REQUEST['postpone_days'];
-    
+
     //Check if variables are empty
     if ($tbl_id == NULL || $postpone_days == NULL) {
         echo "Fejlmeddelelse: Manglende variabler";
         exit;
     }
-    
+
     $postpone_date = date('Y-m-d', strtotime("+$postpone_days days"));
 
     //UPDATE dato
