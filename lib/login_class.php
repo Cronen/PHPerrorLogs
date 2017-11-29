@@ -61,15 +61,15 @@ class login_md {
     }
 
 //logs out user and resets session
-//	function logout()
-//	{
-//		session_start();
-//		session_unset();
-//		session_destroy();
-//
-//		header("Location: /");
-//		exit();
-//	}
+	function logout()
+	{
+		session_start();
+		session_unset();
+		session_destroy();
+
+		header("Location: /");
+		exit();
+	}
 //returns bool success
     function validateLogin($username, $password) {
 
