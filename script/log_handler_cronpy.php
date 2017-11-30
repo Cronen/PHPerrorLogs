@@ -52,7 +52,7 @@ while (true) {
         continue;
     }
     $php_error = array();
-    preg_match('/\[(.+?)\]\sPHP\s([A-z\s]+):\s+(.*)\sin\s(\w+:.*\\\\)(.*)\son\sline\s(\d+)/sU', $line_in_file, $php_error);
+    preg_match('/\[(.+?)\]\sPHP\s([A-z\s]+):\s+(.*)\sin\s(.+:.*\\\\)(.*)\son\sline\s(\d+)/s', $line_in_file, $php_error);
 
     if (count($php_error) != 7) {
         $nextline = fgets($file);
@@ -60,14 +60,13 @@ while (true) {
             $nextline = fgets($file);
         }
         $testline = $line_in_file . $nextline;
-        preg_match('/\[(.+?)\]\sPHP\s([A-z\s]+):\s+(.*)\sin\s(\w+:.*\\\\)(.*)\son\sline\s(\d+)/sU', $testline, $php_error);
+        preg_match('/\[(.+?)\]\sPHP\s([A-z\s]+):\s+(.*)\sin\s(.+:.*\\\\)(.*)\son\sline\s(\d+)/s', $testline, $php_error);
         if (count($php_error) != 7) {
             array_push($lines_not_handled, $line_in_file, $testline);
             $currentError = NULL;
             continue;
         }
     }
-
     $filepath = reverse_backslash($php_error[4]);
     $MSG = reverse_backslash($php_error[3]);
     $currentError = new phperror($php_error[1], $php_error[2], str_replace("'", "''", $MSG), $filepath, $php_error[5], $php_error[6]);
