@@ -59,12 +59,17 @@ while (true) {
         if (strlen($nextline) <= 2) {
             $nextline = fgets($file);
         }
-        $testline = $line_in_file . $nextline;
-        preg_match('/\[(.+?)\]\sPHP\s([A-z\s]+):\s+(.*)\sin\s(.+:.*\\\\)(.*)\son\sline\s(\d+)/s', $testline, $php_error);
+        preg_match('/\[(.+?)\]\sPHP\s([A-z\s]+):\s+(.*)\sin\s(.+:.*\\\\)(.*)\son\sline\s(\d+)/s', $nextline, $php_error);
         if (count($php_error) != 7) {
-            array_push($lines_not_handled, $line_in_file, $testline);
-            $currentError = NULL;
-            continue;
+            $testline = $line_in_file . $nextline;
+            preg_match('/\[(.+?)\]\sPHP\s([A-z\s]+):\s+(.*)\sin\s(.+:.*\\\\)(.*)\son\sline\s(\d+)/s', $testline, $php_error);
+            if (count($php_error) != 7) {
+                array_push($lines_not_handled, $testline);
+                $currentError = NULL;
+                continue;
+            }
+        } else {
+            array_push($lines_not_handled, $line_in_file);
         }
     }
     $filepath = reverse_backslash($php_error[4]);
@@ -97,8 +102,9 @@ function write_log_to_db($db, $insert_number, $exec_time, $counter, $unhandled_e
 
     if (!empty($unhandled_errors)) {
         foreach ($unhandled_errors as $line) {
-            //echo "$line";
-            //skal skrives til db
+            $for_insert = reverse_backslash($line);
+            $sql_insert_string = "INSERT INTO unhandled_errors (`error_line_text`) VALUES ('$for_insert')";
+            $db->addData($sql_insert_string);
         }
     }
 }
