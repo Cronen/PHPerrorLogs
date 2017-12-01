@@ -1,5 +1,5 @@
 <?php
-$overview = new dashboardfunc();
+$overview = new dashboard_func();
 
 if (isset($_REQUEST['logout_btn']))
 {
@@ -34,7 +34,7 @@ if (isset($_REQUEST['logout_btn']))
                     <button name="logout_btn" class="btn-info btn-xs glyphicon glyphicon-off" value="Logout"></button>
                 </span>
                  <br>
-                  <?php $overview->loadscriptdatetime();?>
+                  <?php $overview->loadscript_datetime();?>
             </form>
         </div>
     </div>
