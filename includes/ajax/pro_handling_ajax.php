@@ -142,22 +142,25 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_postpone')) {
         echo "Fejlmeddelelse: Manglende variabler";
         exit;
     }
-
+    
+    $date = date('Y-m-d');
     $postpone_date = date('Y-m-d', strtotime("+$postpone_days days"));
-
+    $username = $_SESSION['user_name'];
     //UPDATE dato
     $data = new db_md();
     $update_sql = "
     UPDATE php_error 
-    SET postpone = '$postpone_date' 
+    SET postpone = '$postpone_date',
+        last_change = '$date',
+        user = '$username'
     WHERE php_error.error_ID = '$tbl_id'";
-
+    
     $success = $data->addData($update_sql);
 
-    if ($success) {
-        echo "Fejl udskudt med $postpone_days dag(e)";
-    } else {
-        echo "Der skete en fejl. Kan ikke udskyde dato";
-    }
+    if ($success) 
+        echo true;
+    else 
+        echo false;
+   
 }
 ?>
