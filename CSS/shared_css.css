@@ -44,12 +44,12 @@ nav a:hover, a:visited, a:link, a:active
 
 .stack-trace-row th
 {
-    background-color: orange;
-    color:black;
+    background-color: #777777;
+    color:white;
 }
 .stack-trace-row td
 {
-    background-color: red;
+    background-color: #ededed;
     color:black;
 }
 #stack-trace-td
