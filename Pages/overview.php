@@ -4,6 +4,7 @@ $overview = new dashboardfunc();
 if (isset($_REQUEST['logout_btn']))
     {
      unset($_SESSION['user_name'], $_SESSION['logged_in']);
+     header("Location: index.php");
     }
 ?>
 
@@ -11,8 +12,14 @@ if (isset($_REQUEST['logout_btn']))
 <div class="container-fluid">
     
     <div class="col-md-12">
+        
         <form>
-        <span>Du er logget ind som: <span><?php if(isset($_SESSION['user_name'])){ echo $_SESSION['user_name'];}?></span> <button type="submit" name="logout_btn" class="btn-info btn-xs" value="Logout"><span class="glyphicon glyphicon-off"></span></button></span>
+        <span>Du er logget ind som: 
+         <?php
+         if(isset($_SESSION['user_name'])){ echo $_SESSION['user_name'];}
+         ?>
+         <button name="logout_btn" class="btn-info btn-xs glyphicon glyphicon-off" value="Logout"></button>
+        </span>
         </form>
     <br>
         <?php $overview->loadscriptdatetime();?>
