@@ -71,8 +71,7 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
         INNER JOIN error_levels ON php_error.php_error_level = error_levels.level_ID
         WHERE postpone IS NULL OR  postpone  <='$today' 
         ORDER BY " . $sort_by . " " . $order_by . "
-        LIMIT 5;";
-
+        LIMIT 10;";
 
     //Lav tabel med indhentet data
     $table_data = $data->makeArray($table_sql);
@@ -88,19 +87,18 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
         $tools = array();
 
         //"slet postering" trigger
-        $tools[] = '<button data-state="ready" data-action="pro_delete" onclick="pro_delete($(this), \'php_error\',  ' . $error_id . ')"  data-placement="bottom" title="Slet postering" class="handling-btn btn-danger glyphicon glyphicon-trash"></button>';
+        $tools[] = '<button data-state="ready" data-action="pro_delete" onclick="pro_delete($(this), \'php_error\',  ' . $error_id . ')"  data-placement="bottom" title="Slet postering" class="handling-btn btn-danger glyphicon glyphicon-trash toolsbtn"></button>';
         //"Udskyd postering" trigger
-        $tools[] = '<button type="button" data-state="ready" onclick="pro_modal($(this), ' . $error_id . ')" data-target="#postponeModal" data-toggle="modal" data-placement="bottom" title="Udskyd error" class="handling-btn btn-warning glyphicon glyphicon-time"></button>';
+        $tools[] = '<button type="button" data-state="ready" onclick="pro_modal($(this), ' . $error_id . ')" data-target="#postponeModal" data-toggle="modal" data-placement="bottom" title="Udskyd error" class="handling-btn btn-warning glyphicon glyphicon-time toolsbtn"></button>';
         //"Se stack trace" trigger
-        $tools[] = '<button data-state="ready" data-action="" onclick="pro_expand($(this), ' . $error_id . ')" data-placement="bottom" title="Se stack trace" class="handling-btn btn-info glyphicon glyphicon-info-sign"></button>';
+        $tools[] = '<button data-state="ready" data-action="" onclick="pro_expand($(this), ' . $error_id . ')" data-placement="bottom" title="Se stack trace" class="handling-btn btn-info glyphicon glyphicon-info-sign toolsbtn"></button>';
         //"Godkend postering" trigger
-        $tools[] = '<button data-state="ready" data-action=""onclick="pro_approve($(this), \'php_error\',  ' . $error_id . ')" data-placement="bottom" title="Godkend error" class="handling-btn btn-success glyphicon glyphicon-ok"></button>';
+        $tools[] = '<button data-state="ready" data-action=""onclick="pro_approve($(this), \'php_error\',  ' . $error_id . ')" data-placement="bottom" title="Godkend error" class="handling-btn btn-success glyphicon glyphicon-ok" toolsbtn></button>';
 
         $row['Handling'] = implode(' ', $tools);
 
         $finished[$error_id] = $row;
     }
-
     $html[] = $tablemkr->makeTable($finished);
     //render
     echo implode('', $html);

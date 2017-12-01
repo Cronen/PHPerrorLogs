@@ -41,7 +41,7 @@ class table_md_class {
     function makeRow($array, $index) {
         $cells = array();
         foreach ($array as $key => $value) {
-            $cells[] = '<td >' . $value . '</td>';
+            $cells[] = '<td>' . $value . '</td>';
         }
         $id = ($this->use_index_as_id) ? $this->id . '' . $index : NULL;
         
