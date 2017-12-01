@@ -12,14 +12,10 @@ class dashboard_func {
         <b>Scriptet er sidst kørt: </b>
         <span>' . $table_data[0]['run_date'] . '
         </span>
-        <button onclick="loadscriptdatetime()" class="btn-xs btn-info" id="refreshbtn"><span class="glyphicon glyphicon-refresh gly-spin"></span></button>
+        <button onclick="run_script" class="btn-xs btn-info" id="refreshbtn"><span class="glyphicon glyphicon-refresh"></span></button>
         </span>';
 
         echo $scriptinfodatetime;
-    }
-
-    function run_script() {
-        
     }
 
 }
