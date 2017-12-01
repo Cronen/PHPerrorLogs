@@ -3,7 +3,8 @@ $overview = new dashboardfunc();
 
 if (isset($_REQUEST['logout_btn']))
 {
-    unset($_SESSION['user_name'], $_SESSION['logged_in']);
+    //unset($_SESSION['user_name'], $_SESSION['logged_in']);
+    session_destroy();
     header("Location: index.php");
 }
 ?>
