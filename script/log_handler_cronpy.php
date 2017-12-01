@@ -4,7 +4,8 @@ set_time_limit(900);
 $time_pre = microtime(true);
 include_once ($_SERVER['DOCUMENT_ROOT'] . '\lib\phperror_class.php');
 include_once ($_SERVER['DOCUMENT_ROOT'] . '\lib\stack_trace_class.php');
-include_once ($_SERVER['DOCUMENT_ROOT'] . "/protected/configuration.php");
+//include_once ($_SERVER['DOCUMENT_ROOT'] . "/protected/configuration.php");
+include_once ($_SERVER['DOCUMENT_ROOT'] . "/protected/configuration_for_test.php");
 include_once ($_SERVER['DOCUMENT_ROOT'] . "/lib/db_class.php");
 include_once ($_SERVER['DOCUMENT_ROOT'] . "/lib/function_lib_shared.php");
 
@@ -85,7 +86,7 @@ exit;
 function save_to_database($php_error_array, $db) {
     $inserts = 0;
     foreach ($php_error_array as $errorobject) {
-        //$inserts += $errorobject->add_to_db($db);
+        $inserts += $errorobject->add_to_db($db);
         //print_r($errorobject);
     }
     return $inserts;
