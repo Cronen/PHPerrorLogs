@@ -33,6 +33,9 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_delete") {
     }
 }
 
+/*
+ * pro_sort 
+ */
 if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
 
     //Instantiering af klasser
@@ -49,11 +52,12 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
         $erlvs[$array['error_ID']][] = $array;
     }
 
-    //Tjekker fra REQUEST['sort'] hvad der skal sorteres efter. 
+    //Tjekker REQUEST['sort'] hvad der skal sorteres efter. 
     $sort_by = $_REQUEST['sort'];
-
-    //Tjekker fra REQUEST['order'] om der sorteres efter asc eller desc
+    //Tjekker REQUEST['order'] om der sorteres efter asc eller desc
     $order_by = $_REQUEST['order'];
+    //Tjekker REQUEST['load'] om limit
+    //$load = $_REQUEST['pages'];
     //variable for dagsdato
     $today = date('Y-m-d');
     //indhent data ud fra sorteringsvalg
@@ -99,7 +103,9 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
 
         $finished[$error_id] = $row;
     }
+        $html[] = "<div>Hello</div>";
     $html[] = $tablemkr->makeTable($finished);
+
     //render
     echo implode('', $html);
 }
