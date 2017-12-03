@@ -1,3 +1,5 @@
+/*Navigationbar*/
+
 nav
 {
     background-color: black;
@@ -15,6 +17,21 @@ nav a:hover, a:visited, a:link, a:active
     text-decoration: none;
     color:white;
 }
+
+/*dashboard*/
+
+.dashboard-sort
+{
+    text-align: center;
+}
+
+.dashboard-script
+{
+
+    padding-top:34px;
+}
+
+/*table*/
 
 .table
 {  
@@ -56,6 +73,9 @@ nav a:hover, a:visited, a:link, a:active
 {
    background-color: white;
 }
+
+/*Animations*/
+
 .gly-spin {
   -webkit-animation: spin 2s infinite linear;
   -moz-animation: spin 2s infinite linear;

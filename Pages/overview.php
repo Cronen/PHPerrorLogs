@@ -13,18 +13,16 @@ if (isset($_REQUEST['logout_btn']))
     
     <div class="dash-board">
         
-        <div class="dashbord-sort col-md-8">
-            <center>
-                <h1>Vælg at sortere efter:</h1>
-               <button data-action="asc" onclick="pro_sort_level($(this));" class="btn-primary sort-button">Level</button>
-               <button data-action="asc" onclick="pro_sort_date($(this));" class="btn-primary sort-button">Dato</button>
-               <button data-action="asc" onclick="pro_sort_site($(this));" class="btn-primary sort-button">Site</button>
-           </center>
+        <div class="dashboard-sort col-md-8">
+            <h3>Vælg at sortere efter:</h3>
+            <button data-action="asc" onclick="pro_sort_level($(this));" class="btn-primary sort-button">Level</button>
+            <button data-action="asc" onclick="pro_sort_date($(this));" class="btn-primary sort-button">Dato</button>
+            <button data-action="asc" onclick="pro_sort_site($(this));" class="btn-primary sort-button">Site</button>
         </div>
         
         <div class="dashboard-script col-md-4">
              <form>
-                <span>Du er logget ind som: 
+                <span>Logget ind som: 
                  <?php
                     if(isset($_SESSION['user_name']))
                     { 
