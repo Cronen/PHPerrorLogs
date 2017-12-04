@@ -80,7 +80,7 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
 
     //Lav tabel med indhentet data
     $table_data = $data->makeArray($table_sql);
-
+    
     $finished = array();
     foreach ($table_data as $array) {
 
