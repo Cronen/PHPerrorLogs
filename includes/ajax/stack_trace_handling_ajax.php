@@ -53,7 +53,7 @@ $html[] = $tablemkr->makeTable($finished);
 //render
 $test  =  implode('', $html);
 
-echo "<table>".$test."</table>";
+echo $test;
 
 
 
