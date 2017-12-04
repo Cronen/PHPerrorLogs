@@ -60,6 +60,7 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
     //$load = $_REQUEST['pages'];
     //variable for dagsdato
     $today = date('Y-m-d');
+    
     //indhent data ud fra sorteringsvalg
     $table_sql = "
         SELECT 
@@ -103,7 +104,8 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
 
         $finished[$error_id] = $row;
     }
-        $html[] = "<div>Hello you</div>";
+        $page = new pro_pagination();
+        $html[] = $page->pagination_pro_content();
         $html[] = $tablemkr->makeTable($finished);
 
     //render

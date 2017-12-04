@@ -6,9 +6,13 @@ class pro_pagination
     {
         $html = '
                 <div class="pro-pagination-custom col-md-12">
-                    <span onclick="pro_sort($(this))class="page-back glyphicon glyphicon-backward"></span>
-                    <span onclick="pro_sort($(this))class="pagination-pages">1 / 14</span>
-                    <span onclick="pro_sort($(this))class="page-forward glyphicon glyphicon-forward"></span>
+                    <span onclick="page_forward(5);" class="page-back glyphicon glyphicon-backward"></span>
+                    <span class="pagination-pages">1 / 14</span>
+                    <span onclick="page_backward($(this));" class="page-forward glyphicon glyphicon-forward"></span>
                 </div>';
+        
+        echo $html;
     }
+    
+    
 }
