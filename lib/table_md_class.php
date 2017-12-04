@@ -30,7 +30,7 @@ class table_md_class {
             
             $rows[] = $this->makeRow($array, $index);
             //tilføjer tr til stacktrace
-            $rows[] = '<tr class="stack-trace-row"> <td id="stack-trace-td" class="closed stack-trace-row'.$index.'" style="display:none" colspan="8"></td> </tr>';
+            $rows[] = '<tr class="stack-trace-row"> <td class="closed stack-trace-row'.$index.'" style="display:none" colspan="8"></td> </tr>';
         }
             
         $html = '<table class="table table-responsive">' . implode('', $rows) . '</table>';
