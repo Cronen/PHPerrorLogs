@@ -13,6 +13,9 @@ $file = fopen('php_error.log', 'r');
 //Skip first line - its a line to create error log file
 fgets($file);
 
+$regex_error = '/\[(.+?)\]\sPHP\s([A-z\s]+):\s+(.*)\sin\s(.+:.*\\\\)(.*)\son\sline\s(\d+)/s';
+$regex_stack_trace = '/\[(.+?)\]\sPHP\s+(\d+?)\.\s(.+?\))\s(.+.*\\\\)(.+?):(\d+)/' ;
+
 $counter = 0;
 $errorArray = array();
 $lines_not_handled = array();
@@ -42,7 +45,7 @@ while (true) {
 
         $stacktracesearch = array();
 
-        preg_match('/\[(.+?)\]\sPHP\s+(\d+?)\.\s(.+?\))\s(.+.*\\\\)(.+?):(\d+)/', $line_in_file, $stacktracesearch);
+        preg_match($regex_stack_trace, $line_in_file, $stacktracesearch);
         //bind trace til object
         $stacktracesearch[3] = reverse_backslash($stacktracesearch[3]);
         $stacktracesearch[4] = reverse_backslash($stacktracesearch[4]);
@@ -52,17 +55,17 @@ while (true) {
         continue;
     }
     $php_error = array();
-    preg_match('/\[(.+?)\]\sPHP\s([A-z\s]+):\s+(.*)\sin\s(.+:.*\\\\)(.*)\son\sline\s(\d+)/s', $line_in_file, $php_error);
+    preg_match($regex_error, $line_in_file, $php_error);
 
     if (count($php_error) != 7) {
         $nextline = fgets($file);
         if (strlen($nextline) <= 2) {
             $nextline = fgets($file);
         }
-        preg_match('/\[(.+?)\]\sPHP\s([A-z\s]+):\s+(.*)\sin\s(.+:.*\\\\)(.*)\son\sline\s(\d+)/s', $nextline, $php_error);
+        preg_match($regex_error, $nextline, $php_error);
         if (count($php_error) != 7) {
             $testline = $line_in_file . $nextline;
-            preg_match('/\[(.+?)\]\sPHP\s([A-z\s]+):\s+(.*)\sin\s(.+:.*\\\\)(.*)\son\sline\s(\d+)/s', $testline, $php_error);
+            preg_match($regex_error, $testline, $php_error);
             if (count($php_error) != 7) {
                 array_push($lines_not_handled, $testline);
                 $currentError = NULL;
