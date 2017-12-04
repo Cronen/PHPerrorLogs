@@ -40,6 +40,11 @@ $table_sql = "
 
 $table_data = $data->makeArray($table_sql);
 
+if(empty($table_data)) 
+{
+    echo makeHighlight("Ingen stack trace fundet");
+    exit();
+}
 
 foreach ($table_data as $array) {
     

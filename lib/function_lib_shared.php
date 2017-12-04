@@ -27,7 +27,7 @@ function makeWarning($txt)
 
 function makeHighlight($txt)
 {
-	return '<div style="background-color: blue; color:white; padding: 10px; border-color: black; margin:2px,0px;">'.$txt.'</div>';
+	return '<div style="background-color: lightgrey; color:black; padding: 10px; border-color: black; margin:2px,0px;">'.$txt.'</div>';
 }
 
 ?>
