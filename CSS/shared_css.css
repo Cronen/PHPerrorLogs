@@ -63,6 +63,7 @@ nav a:hover, a:visited, a:link, a:active
 {
     background-color: #777777;
     color:white;
+    cursor: pointer; 
 }
 .stack-trace-row td
 {
