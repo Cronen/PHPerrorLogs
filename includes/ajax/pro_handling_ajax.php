@@ -22,9 +22,9 @@ if (!$_SESSION['logged_in'] == true) {
  */
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_delete") {
     
-    //$sqlDelete = "DELETE FROM php_error WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
     $today = date('Y-m-d');
-    $sqlDelete = "UPDATE php_error SET postpone = NULL, status = 'deleted', last_change = '".$today."', user = '".$_SESSION['user_name']."' WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
+    $username = $_SESSION['user_name'];
+    $sqlDelete = "UPDATE php_error SET postpone = NULL, status = 'deleted', last_change = '".$today."', user = '".$username."' WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
     $delete = new db_md();
     $delRes = $delete->addData($sqlDelete);
 
@@ -41,7 +41,8 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_delete") {
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_approve") {
     
     $today = date('Y-m-d');
-    $sqlApprove = "UPDATE php_error SET postpone = NULL, status = 'approved', last_change = '".$today."', user = '".$_SESSION['user_name']."' WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
+    $username = $_SESSION['user_name'];
+    $sqlApprove = "UPDATE php_error SET postpone = NULL, status = 'approved', last_change = '".$today."', user = '".$username."' WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
     $approve = new db_md();
     $appRes = $approve->addData($sqlApprove);
 
@@ -160,7 +161,9 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_modal')) {
 
     echo $postponeModal;
 }
-
+/*
+ * pro_postpone
+ */
 if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_postpone')) {
 
     $tbl_id = $_REQUEST['tbl_id'];
