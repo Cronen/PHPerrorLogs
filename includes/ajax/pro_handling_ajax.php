@@ -21,13 +21,32 @@ if (!$_SESSION['logged_in'] == true) {
  * * pro_delete
  */
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_delete") {
-
-    $sqlDelete = "DELETE FROM php_error WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
+    
+    //$sqlDelete = "DELETE FROM php_error WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
+    $today = date('Y-m-d');
+    $sqlDelete = "UPDATE php_error SET status = 'deleted', last_change = '".$today."', user = '".$_SESSION['user_name']."' WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
     $delete = new db_md();
     $delRes = $delete->addData($sqlDelete);
 
     if ($delRes == true) {
         echo "Postering er slettet";
+    } else {
+        echo "Handlingen fejlede. Prøv igen";
+    }
+}
+
+/*
+ * pro_approve
+ */
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_approve") {
+    
+    $today = date('Y-m-d');
+    $sqlApprove = "UPDATE php_error SET status = 'approved', last_change = '".$today."', user = '".$_SESSION['user_name']."' WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
+    $approve = new db_md();
+    $appRes = $approve->addData($sqlApprove);
+
+    if ($appRes == true) {
+        echo "Postering er godkendt";
     } else {
         echo "Handlingen fejlede. Prøv igen";
     }
@@ -98,7 +117,7 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
         //"Se stack trace" trigger
         $tools[] = '<button data-state="ready" data-action="" onclick="pro_expand($(this), ' . $error_id . ')" data-placement="bottom" title="Se stack trace" class="handling-btn btn-info glyphicon glyphicon-info-sign toolsbtn"></button>';
         //"Godkend postering" trigger
-        $tools[] = '<button data-state="ready" data-action=""onclick="pro_approve($(this), \'php_error\',  ' . $error_id . ')" data-placement="bottom" title="Godkend error" class="handling-btn btn-success glyphicon glyphicon-ok" toolsbtn></button>';
+        $tools[] = '<button data-state="ready" data-action="pro_approve"onclick="pro_approve($(this), \'php_error\',  ' . $error_id . ')" data-placement="bottom" title="Godkend error" class="handling-btn btn-success glyphicon glyphicon-ok" toolsbtn></button>';
 
         $row['Handling'] = implode(' ', $tools);
 
