@@ -24,7 +24,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_delete") {
     
     //$sqlDelete = "DELETE FROM php_error WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
     $today = date('Y-m-d');
-    $sqlDelete = "UPDATE php_error SET status = 'deleted', last_change = '".$today."', user = '".$_SESSION['user_name']."' WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
+    $sqlDelete = "UPDATE php_error SET postpone = NULL, status = 'deleted', last_change = '".$today."', user = '".$_SESSION['user_name']."' WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
     $delete = new db_md();
     $delRes = $delete->addData($sqlDelete);
 
