@@ -41,7 +41,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_delete") {
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_approve") {
     
     $today = date('Y-m-d');
-    $sqlApprove = "UPDATE php_error SET status = 'approved', last_change = '".$today."', user = '".$_SESSION['user_name']."' WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
+    $sqlApprove = "UPDATE php_error SET postpone = NULL, status = 'approved', last_change = '".$today."', user = '".$_SESSION['user_name']."' WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
     $approve = new db_md();
     $appRes = $approve->addData($sqlApprove);
 
@@ -93,10 +93,12 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
         php_error.error_line AS Linje
         FROM php_error 
         INNER JOIN error_levels ON php_error.php_error_level = error_levels.level_ID
-        WHERE postpone IS NULL OR  postpone  <='$today' 
+        WHERE status IS NULL AND postpone IS NULL OR postpone ='$today' 
         ORDER BY " . $sort_by . " " . $order_by . "
         LIMIT 10;";
-
+    
+    //WHERE postpone IS NULL OR postpone <='$today'
+    //
     //Lav tabel med indhentet data
     $table_data = $data->makeArray($table_sql);
     
