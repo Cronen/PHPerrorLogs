@@ -32,8 +32,13 @@ if (isset($_REQUEST['logout_btn']))
                     <button name="logout_btn" class="btn-info btn-xs glyphicon glyphicon-off" value="Logout"></button>
                 </span>
                  <br>
+                <?php 
+                    $overview->loadscript_datetime();
+                ?>
+                 <br>
+                 <button class="btn-info" onclick="pro_scriptlog();">Se scriptlog (det er en dummy-button, inden i spørger om den virker)</button>
             </form>
-            <?php $overview->loadscript_datetime();?>
+
         </div>
     </div>
 </div>
