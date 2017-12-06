@@ -129,17 +129,9 @@ $number_of_inserts = save_to_database($errorArray, $db);
 $time_post = microtime(true);
 $exec_time = $time_post - $time_pre;
 
-//write_log_to_db($db, $number_of_inserts, $exec_time, $counter, $lines_not_handled);
+write_log_to_db($db, $number_of_inserts, $exec_time, $counter, $lines_not_handled);
 
-//echo date('Y-m-d H:i:s') . " - Script done!\n";
-foreach ($lines_not_handled as $value) {
-    echo 'Lines not handled: '.$value; 
-}
-
-//return array("Status"=>"true", "msg"=>"Script ran succelsfully");
-sleep(5);
-//echo json_encode(date('Y-m-d H:i:s') . " - Script done!\n");
-echo "".date('Y-m-d H:i:s') . " - Script done!\n";
+echo date('Y-m-d H:i:s') . " - Script done!\n".$number_of_inserts." lines inserted.";
 exit;
 
 function save_to_database($php_error_array, $db) {
@@ -147,6 +139,7 @@ function save_to_database($php_error_array, $db) {
     foreach ($php_error_array as $errorobject) {
         //$inserts += $errorobject->add_to_db($db);
         //echo $errorobject;
+        $inserts++;
     }
     return $inserts;
 }
@@ -157,8 +150,9 @@ function write_log_to_db($db, $insert_number, $exec_time, $counter, $unhandled_e
 
     if (!empty($unhandled_errors)) {
         foreach ($unhandled_errors as $line) {
-            //echo "$line";
-            //skal skrives til db
+            $for_insert = reverse_backslash($line);
+            $sql_insert_string = "INSERT INTO unhandled_errors (`error_line_text`) VALUES ('$for_insert')";
+            $db->addData($sql_insert_string);
         }
     }
 }
