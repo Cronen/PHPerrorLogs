@@ -1,7 +1,7 @@
 <?php
 
 //Instantiering til dashboard_class.php
-$overview = new dashboard_func();
+//$overview = new dashboard_func();
 
 //Simuler logout - Mest for proof of concept. Regner med at du har en selv.
 if (isset($_REQUEST['logout_btn']))
@@ -22,7 +22,7 @@ if (isset($_REQUEST['logout_btn']))
         </div>
         
         <div class="dashboard-script col-md-4">
-             <form>
+            <form>
                 <span>Logget ind som: 
                  <?php
                     if(isset($_SESSION['user_name']))
@@ -32,16 +32,15 @@ if (isset($_REQUEST['logout_btn']))
                  ?>
                     <button name="logout_btn" class="btn-info btn-xs glyphicon glyphicon-off" value="Logout"></button>
                 </span>
-                 <br>
+                    <br>
                 <span>
-                <b>Scriptet er sidst kørt: </b>
-                <span id="scripttime"><?php $overview->loadscript_datetime(); ?></span>
-                <button onclick="run_script();" class="btn-xs btn-info" id="refreshbtn"><span class="glyphicon glyphicon-refresh"></span></button>
+                    <b>Scriptet er sidst kørt: </b>
+                    <span id="script-time"></span>
+                    <button data-state="ready" onclick="run_script();" class="btn-xs btn-info" id="refreshbtn"><span class="glyphicon glyphicon-refresh"></span></button>
                 </span>
-                 <br>
-                 <button class="btn-info" onclick="pro_scriptlog();">Se scriptlog</button>
+                    <br>
+                 <button class="btn-info" onclick="">Se scriptlog</button>
             </form>
-
         </div>
     </div>
 </div>
