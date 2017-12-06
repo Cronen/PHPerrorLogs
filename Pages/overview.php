@@ -1,9 +1,11 @@
 <?php
+
+//Instantiering til dashboard_class.php
 $overview = new dashboard_func();
 
+//Simuler logout - Mest for proof of concept. Regner med at du har en selv.
 if (isset($_REQUEST['logout_btn']))
 {
-    //unset($_SESSION['user_name'], $_SESSION['logged_in']);
     session_destroy();
     header("Location: index.php");
 }
@@ -12,7 +14,6 @@ if (isset($_REQUEST['logout_btn']))
 <div class="container-fluid">
     
     <div class="dash-board">
-        
         <div class="dashboard-sort col-md-8">
             <h3>Vælg at sortere efter:</h3>
             <button data-action="asc" onclick="pro_sort_level($(this));" class="btn-primary sort-button">Level</button>
@@ -36,7 +37,7 @@ if (isset($_REQUEST['logout_btn']))
                     $overview->loadscript_datetime();
                 ?>
                  <br>
-                 <button class="btn-info" onclick="pro_scriptlog();">Se scriptlog (det er en dummy-button, inden i spørger om den virker)</button>
+                 <button class="btn-info" onclick="pro_scriptlog();">Se scriptlog</button>
             </form>
 
         </div>
@@ -45,7 +46,7 @@ if (isset($_REQUEST['logout_btn']))
 
 <br>
 
-
+<!--Div der hentes tables ind i -->
 <div class="content-wrapper col-md-12">
     
 </div>
