@@ -21,10 +21,10 @@ if (!$_SESSION['logged_in'] == true) {
  * * pro_delete
  */
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_delete") {
-    
+
     $today = date('Y-m-d');
     $username = $_SESSION['user_name'];
-    $sqlDelete = "UPDATE php_error SET postpone = NULL, status = 'deleted', last_change = '".$today."', user = '".$username."' WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
+    $sqlDelete = "UPDATE php_error SET postpone = NULL, status = 'deleted', last_change = '" . $today . "', user = '" . $username . "' WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
     $delete = new db_md();
     $delRes = $delete->addData($sqlDelete);
 
@@ -39,10 +39,10 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_delete") {
  * pro_approve
  */
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_approve") {
-    
+
     $today = date('Y-m-d');
     $username = $_SESSION['user_name'];
-    $sqlApprove = "UPDATE php_error SET postpone = NULL, status = 'approved', last_change = '".$today."', user = '".$username."' WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
+    $sqlApprove = "UPDATE php_error SET postpone = NULL, status = 'approved', last_change = '" . $today . "', user = '" . $username . "' WHERE error_ID = '" . $_REQUEST['tbl_id'] . "'";
     $approve = new db_md();
     $appRes = $approve->addData($sqlApprove);
 
@@ -57,11 +57,28 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == "pro_approve") {
  * pro_sort 
  */
 if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
-
-    //Instantiering af klasser
     $data = new db_md();
     $tablemkr = new table_md_class();
 
+    $table_size = $data->makeArray('SELECT COUNT(*) FROM php_error WHERE status IS NULL AND postpone IS NULL OR postpone <=CURRENT_DATE');
+    $max_page = ceil($table_size[0]['COUNT(*)'] / 10);
+
+    $page;
+    if (!isset($_REQUEST['page_changer']) || $_REQUEST['page_changer'] == NULL) {
+        $page = 1;
+        $_SESSION['current_page'] = $page;
+    } else {
+        if ($_REQUEST['page_changer'] == 'true' && $_SESSION['current_page'] <= ($max_page - 1)) {
+            $_SESSION['current_page'] = $_SESSION['current_page'] + 1;
+        } else if ($_REQUEST['page_changer'] == 'false' && $_SESSION['current_page'] > 1) {
+            $_SESSION['current_page'] = $_SESSION['current_page'] - 1;
+        }
+    }
+    if (isset($_SESSION['current_page'])) {
+        $page = $_SESSION['current_page'];
+    }
+    $page_offset = (($page - 1) * 10);
+    //Instantiering af klasser
     // Hent alle php_errors og tilføj til array
     $sql = "SELECT * FROM php_error";
     $arrays = $data->makeArray($sql);
@@ -80,7 +97,7 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
     //$load = $_REQUEST['pages'];
     //variable for dagsdato
     $today = date('Y-m-d');
-    
+
     //indhent data ud fra sorteringsvalg
     $table_sql = "
         SELECT 
@@ -94,15 +111,15 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
         php_error.error_line AS Linje
         FROM php_error 
         INNER JOIN error_levels ON php_error.php_error_level = error_levels.level_ID
-        WHERE status IS NULL AND postpone IS NULL OR postpone ='$today' 
+        WHERE status IS NULL AND postpone IS NULL OR postpone <='$today' 
         ORDER BY " . $sort_by . " " . $order_by . "
-        LIMIT 10;";
-    
+        LIMIT 10 OFFSET $page_offset;";
+
     //WHERE postpone IS NULL OR postpone <='$today'
     //
     //Lav tabel med indhentet data
     $table_data = $data->makeArray($table_sql);
-    
+
     $finished = array();
     foreach ($table_data as $array) {
 
@@ -126,9 +143,18 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
 
         $finished[$error_id] = $row;
     }
-        $page = new pro_pagination();
-        $html[] = $page->pagination_pro_content();
-        $html[] = $tablemkr->makeTable($finished);
+    $JS_function = array();
+    preg_match('/[^_]*$/', $sort_by, $JS_function);
+
+
+
+    $page = '<div class="pro-pagination-custom col-md-12">
+                    <span data-action="' . $order_by . '" onclick="pro_sort_' . $JS_function[0] . '($(this),false);" class="page-back glyphicon glyphicon-backward"></span>
+                    <span class="pagination-pages">' . $page . '/' . $max_page . '</span>
+                    <span data-action="' . $order_by . '" onclick="pro_sort_' . $JS_function[0] . '($(this),true);" class="page-forward glyphicon glyphicon-forward"></span>
+                </div>';
+    $html[] = $page;
+    $html[] = $tablemkr->makeTable($finished);
 
     //render
     echo implode('', $html);
@@ -174,7 +200,7 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_postpone')) {
         echo "Fejlmeddelelse: Manglende variabler";
         exit;
     }
-    
+
     $date = date('Y-m-d');
     $postpone_date = date('Y-m-d', strtotime("+$postpone_days days"));
     $username = $_SESSION['user_name'];
@@ -186,13 +212,12 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_postpone')) {
         last_change = '$date',
         user = '$username'
     WHERE php_error.error_ID = '$tbl_id'";
-    
+
     $success = $data->addData($update_sql);
 
-    if ($success) 
+    if ($success)
         echo true;
-    else 
+    else
         echo false;
-   
 }
 ?>
