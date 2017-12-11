@@ -1,5 +1,5 @@
 <?php
-header('Content-type: application/json');
+//header('Content-type: application/json');
 
 set_time_limit(900);
 $time_pre = microtime(true);
@@ -131,7 +131,8 @@ $exec_time = $time_post - $time_pre;
 
 write_log_to_db($db, $number_of_inserts, $exec_time, $counter, $lines_not_handled);
 
-echo date('Y-m-d H:i:s') . " - Script done!\n".$number_of_inserts." lines inserted.";
+//echo date('Y-m-d H:i:s') . " - Script done!\n".$number_of_inserts." lines inserted.";
+echo date('Y-m-d H:i:s');
 exit;
 
 function save_to_database($php_error_array, $db) {
