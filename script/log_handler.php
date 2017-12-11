@@ -1,6 +1,6 @@
 <?php
 //header('Content-type: application/json');
-
+date_default_timezone_set("Europe/Copenhagen");
 set_time_limit(900);
 $time_pre = microtime(true);
 include_once ($_SERVER['DOCUMENT_ROOT'] . '\lib\phperror_class.php');
