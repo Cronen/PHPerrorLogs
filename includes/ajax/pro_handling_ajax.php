@@ -220,4 +220,30 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_postpone')) {
     else
         echo false;
 }
+/*
+ * pro_scriptlog
+ */
+if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_scriptlog')) {
+    
+    $data = new db_md();
+    $tablemkr = new table_md_class();
+    $sql = "
+            SELECT
+            log_entry_id AS ID,
+            run_date AS Dato,
+            run_time AS Runtime,
+            number_of_lines AS \"Antal læste linjer\",
+            number_of_inserts AS \"Indsatte linjer i DB\"
+            FROM log
+            ORDER BY ID DESC
+            LIMIT 10";
+    
+    $scriptlog_data = $data->makeArray($sql);
+    
+    $html[] = $tablemkr->makeTable($scriptlog_data);
+
+    //render
+    echo implode('', $html);
+            
+}
 ?>

@@ -38,8 +38,7 @@ if (isset($_SESSION['user_name'])) {
                 <br>
                 <div id="last_run_div"></div>
             </span>
-            <br>
-            <button class="btn-info" onclick="pro_scriptlog()">Se scriptlog</button>
+            <button class="btn-info" data-action="pro_scriptlog" data-state="ready" onclick="pro_scriptlog($(this));">Se scriptlog</button>
         </div>
     </div>
 </div>
