@@ -1,5 +1,5 @@
 <?php
-
+date_default_timezone_set("Europe/Copenhagen");
 set_time_limit(900);
 $time_pre = microtime(true);
 include_once ($_SERVER['DOCUMENT_ROOT'] . '\lib\phperror_class.php');
@@ -87,7 +87,7 @@ $exec_time = $time_post - $time_pre;
 
 write_log_to_db($db, $number_of_inserts, $exec_time, $counter, $lines_not_handled);
 
-echo date('Y-m-d H:i:s') . " - Script done!\n";
+echo date('Y-m-d H:i:s')."\n";
 exit;
 
 function save_to_database($php_error_array, $db) {
