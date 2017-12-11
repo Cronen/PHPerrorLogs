@@ -88,6 +88,7 @@ $exec_time = $time_post - $time_pre;
 write_log_to_db($db, $number_of_inserts, $exec_time, $counter, $lines_not_handled);
 
 echo date('Y-m-d H:i:s')."\n";
+//unlink('php_error.log'); //unlink vil slette filen efter vi har kørt scriptet. 
 exit;
 
 function save_to_database($php_error_array, $db) {

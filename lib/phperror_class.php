@@ -46,7 +46,6 @@ class phperror {
         } else {
             //update phperror's datetime in db.
             $new_error_id = $db->makeArray($this->sql_select_string(true));
-            print_r($new_error_id);
             if (empty($new_error_id[0])) {
                 $status = ""; //Denne variable skal sættes lig ', status = NULL' inden endelig version. 
                 $sql_update_string = "UPDATE php_error SET error_date = '$this->error_date'$status WHERE php_error.error_ID = " . $error_id[0]['error_ID'];
