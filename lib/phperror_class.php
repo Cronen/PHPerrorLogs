@@ -26,7 +26,7 @@ class phperror {
     function add_to_DB($db) {
         $number__of_inserts = 0;
         //finder error level i tal
-        
+
         $error_id = $db->makeArray($this->sql_select_string(false));
         if (empty($error_id[0])) {
             $sql_insert_string = "INSERT INTO `php_error` (`error_date`, `php_error_level`, `error_msg`, `error_location`, `error_file`, `error_line`) "
@@ -46,8 +46,10 @@ class phperror {
         } else {
             //update phperror's datetime in db.
             $new_error_id = $db->makeArray($this->sql_select_string(true));
+            print_r($new_error_id);
             if (empty($new_error_id[0])) {
-                $sql_update_string = "UPDATE php_error SET error_date = '$this->error_date' WHERE php_error.error_ID = " . $error_id[0]['error_ID'];
+                $status = ""; //Denne variable skal sættes lig ', status = NULL' inden endelig version. 
+                $sql_update_string = "UPDATE php_error SET error_date = '$this->error_date'$status WHERE php_error.error_ID = " . $error_id[0]['error_ID'];
                 $db->addData($sql_update_string);
             }
         }
@@ -68,17 +70,19 @@ class phperror {
         }
         return $returnString;
     }
+
     //function to create sql select statement. This is to avoid long repeated code and make the code more readable
     function sql_select_string($with_without_date) {
         $extend_date = "";
+        $status = "";
         if ($with_without_date === true) {
-            $extend_date = "error_date = '$this->error_date' AND";
-        } 
+            $extend_date = "error_date >= '$this->error_date' AND";
+            $status = "status IS NULL AND";
+        }
         $level = "SELECT level_ID FROM error_levels WHERE level = '$this->error_level'";
         $sql_select_string = "SELECT error_ID FROM php_error "
-                . "WHERE $extend_date php_error_level = ($level) AND error_msg = '$this->error_msg' AND "
+                . "WHERE $status $extend_date php_error_level = ($level) AND error_msg = '$this->error_msg' AND "
                 . "error_location = '$this->error_location ' AND error_file = '$this->error_file' AND error_line = '$this->error_line';";
-
         return $sql_select_string;
     }
 
