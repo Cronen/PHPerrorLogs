@@ -149,9 +149,9 @@ if ((isset($_REQUEST['action'])) && ($_REQUEST['action'] == 'pro_sort')) {
 
 
     $page = '<div class="pro-pagination-custom col-md-12">
-                    <span data-action="' . $order_by . '" onclick="pro_sort_' . $JS_function[0] . '($(this),false);" class="page-back glyphicon glyphicon-backward"></span>
-                    <span class="pagination-pages">' . $page . '/' . $max_page . '</span>
-                    <span data-action="' . $order_by . '" onclick="pro_sort_' . $JS_function[0] . '($(this),true);" class="page-forward glyphicon glyphicon-forward"></span>
+                    <span data-action="' . $order_by . '" onclick="pro_sort_' . $JS_function[0] . '($(this),false);" class="page-back glyphicon glyphicon-backward page-info"></span>
+                    <span class="pagination-pages page-info">' . $page . '/' . $max_page . '</span>
+                    <span data-action="' . $order_by . '" onclick="pro_sort_' . $JS_function[0] . '($(this),true);" class="page-forward glyphicon glyphicon-forward page-info"></span>
                 </div>';
     $html[] = $page;
     $html[] = $tablemkr->makeTable($finished);
