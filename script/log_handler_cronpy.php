@@ -1,4 +1,5 @@
 <?php
+
 date_default_timezone_set("Europe/Copenhagen");
 set_time_limit(900);
 $time_pre = microtime(true);
@@ -9,16 +10,28 @@ include_once ($_SERVER['DOCUMENT_ROOT'] . "/protected/configuration_for_test.php
 include_once ($_SERVER['DOCUMENT_ROOT'] . "/lib/db_class.php");
 include_once ($_SERVER['DOCUMENT_ROOT'] . "/lib/function_lib_shared.php");
 
-$file = fopen('php_error.log', 'r');
+$counter = 0;
+$errorArray = array();
+$lines_not_handled = array();
+$filepath = 'php_error.log';
+$file;
+
+if (file_exists($filepath)) {
+    $file = fopen($filepath, 'r');
+} else {
+    echo 'File not found';
+    $db = new db_md();
+    write_log_to_db($db, 0, 0, $counter, $lines_not_handled);
+    exit;
+}
+
 //Skip first line - its a line to create error log file
 fgets($file);
 
 $regex_error = '/\[(.+?)\]\sPHP\s([A-z\s]+):\s+(.*)\sin\s(.+:.*\\\\)(.*)\son\sline\s(\d+)/s';
-$regex_stack_trace = '/\[(.+?)\]\sPHP\s+(\d+?)\.\s(.+?\))\s(.+.*\\\\)(.+?):(\d+)/' ;
+$regex_stack_trace = '/\[(.+?)\]\sPHP\s+(\d+?)\.\s(.+?\))\s(.+.*\\\\)(.+?):(\d+)/';
 
-$counter = 0;
-$errorArray = array();
-$lines_not_handled = array();
+
 while (true) {
     $counter++;
     $line_in_file = fgets($file);
@@ -87,7 +100,7 @@ $exec_time = $time_post - $time_pre;
 
 write_log_to_db($db, $number_of_inserts, $exec_time, $counter, $lines_not_handled);
 
-echo date('Y-m-d H:i:s')."\n";
+echo date('Y-m-d H:i:s') . "\n";
 //unlink('php_error.log'); //unlink vil slette filen efter vi har kørt scriptet. 
 exit;
 
