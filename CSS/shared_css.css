@@ -1,5 +1,4 @@
 /*Navigationbar*/
-
 nav
 {
     background-color: black;
@@ -74,6 +73,11 @@ nav a:hover, a:visited, a:link, a:active
 {
     padding-bottom: 0px;
     background-color: white;
+}
+
+.page-info 
+{
+    font-size: 20px;
 }
 
 /*Animations*/
