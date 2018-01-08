@@ -1,5 +1,5 @@
 <?php
-
+//Config fil til lokal database
 //Indsætter db-info i variabler
 $dbServername = "localhost";
 $dbUsername = "root";

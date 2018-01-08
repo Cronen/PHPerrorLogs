@@ -5,7 +5,7 @@ set_time_limit(900);
 $time_pre = microtime(true);
 include_once ($_SERVER['DOCUMENT_ROOT'] . '\lib\phperror_class.php');
 include_once ($_SERVER['DOCUMENT_ROOT'] . '\lib\stack_trace_class.php');
-//include_once ($_SERVER['DOCUMENT_ROOT'] . "/protected/configuration.php");
+//include_once ($_SERVER['DOCUMENT_ROOT'] . "/protected/configuration.php"); --> Til lokal database
 include_once ($_SERVER['DOCUMENT_ROOT'] . "/protected/configuration_for_test.php");
 include_once ($_SERVER['DOCUMENT_ROOT'] . "/lib/db_class.php");
 include_once ($_SERVER['DOCUMENT_ROOT'] . "/lib/function_lib_shared.php");
